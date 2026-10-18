@@ -26,4 +26,5 @@ As a maintainer, I need code that follows the project’s C++ conventions and ex
 
 - **Result:** Doxygen HTML documentation generated successfully for the `src/` API and implementation files.
 - **Verification:** Project Debug configure/build and the `doxygen` target passed.
-- **Commit:** `804deaa` — `chore(S12): configure Doxygen documentation` (configuration); generation evidence completed in this milestone.
+- **Commits:** `804deaa` — `chore(S12): configure Doxygen documentation`; `e83c62f` — `docs(S12): document production APIs`.
+- **Result:** Public API fields, configuration values, invariants, return behavior, and rejection semantics are documented with Doxygen comments.
