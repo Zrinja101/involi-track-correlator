@@ -142,9 +142,16 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Runtime:** Approximately 11.3 seconds for the scorer pipeline in the current environment.
 - **Limitation:** Peak RSS was not measured because `/usr/bin/time` is unavailable; dedicated memory instrumentation remains required.
 
+## Holdout milestone
+
+- **Fixture:** `data/synthetic/holdout/`.
+- **Generator:** `tools/generate_calibration_fixtures.py --family holdout`.
+- **Scenario:** 20 reports for two aircraft with no identifiers, varied receiver-clock offsets, and a trajectory pattern distinct from F01–F08.
+- **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors without parameter changes.
+- **Interpretation:** The current parameter set generalizes to this small holdout scenario. This does not replace larger holdout and performance evidence.
+
 ## Open items
 
-- Add holdout coverage.
 - Select final parameter values after the complete fixture set exists.
 - Collect peak-state/RSS evidence with an available measurement tool.
 - Complete S12 Doxygen and S13 Docker/reproducibility work.
