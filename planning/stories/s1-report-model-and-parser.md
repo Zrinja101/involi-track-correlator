@@ -2,7 +2,7 @@
 
 **Parent feature:** [F1 — Input and Report Model](../features/f1-input-and-report-model.md)  
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** Ready for design
+**Status:** Implemented
 
 ## Story
 
@@ -23,6 +23,7 @@ As the correlator, I need each JSONL line converted into a typed report so downs
 
 ## Traceability
 
-- Source scope: `src/` parser/model modules; integration with `src/main.cpp`.
-- Tests: parser unit tests in `tests/`.
-- Verification: F1 and F5 contract checks.
+- Source scope: `src/report.h`, `src/report_parser.h`, `src/report_parser.cpp`, and the `correlator_core` CMake target.
+- Tests: `tests/correlator_tests.cpp`, covering seven parser scenarios and 39 assertions.
+- Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Deferred to S2: geographic range policy and application-level rejection/output behavior.
