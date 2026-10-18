@@ -101,8 +101,16 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **Interpretation:** The current history-aware identifier logic preserves continuity and separates duplicate identifiers in this controlled geometry.
 
+## Calibration milestone: F04
+
+- **Fixture:** `data/synthetic/f04-gaps-and-retirement/`.
+- **Generator:** `tools/generate_calibration_fixtures.py --family f04`.
+- **Scenario:** Five observations with gaps inside and beyond the 60-second retirement boundary.
+- **Result:** `PASS`; 100.00% association, 1 ID switch, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Interpretation:** The track store retains continuity through shorter gaps and safely recreates a track after retirement. The one switch is expected at the configured retirement boundary and remains within the scorer limit.
+
 ## Open items
 
-- Add fixture families F04–F08 and holdout coverage.
+- Add fixture families F05–F08 and holdout coverage.
 - Select final parameter values after the complete fixture set exists.
 - Define peak-state and runtime measurements for F08.
