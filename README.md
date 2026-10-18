@@ -73,6 +73,19 @@ docker run --rm -i correlator < data/sample/reports.jsonl > output.jsonl
 Add dependencies through CMake (`FetchContent`, pinned to a tag or commit) or a vcpkg manifest
 (`vcpkg.json` with a `builtin-baseline`). Explain each dependency in one line in your README.
 
+## Coverage
+
+Configure a dedicated instrumented build and run the unit suite:
+
+```sh
+cmake -S . -B build/Coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON
+cmake --build build/Coverage -j10
+ctest --test-dir build/Coverage --output-on-failure
+gcovr --root . --object-directory build/Coverage --filter 'src/.*' --branches --print-summary
+```
+
+Run the synthetic fixtures and the sample through `build/Coverage/correlator` before collecting the report so executable paths are included.
+
 ## Scoring
 
 `data/sample` holds a sample input and its ground truth (`truth.jsonl`: the aircraft behind each

@@ -27,4 +27,5 @@ Synthetic fixture families, calibration procedure, and holdout policy must follo
 - **F07 result:** Delayed-burst and deadline-boundary fixture passes with 100.00% association, zero switches, zero merges, zero invalid accepted reports, and zero contract errors.
 - **F08 result:** 10,000-report/500-aircraft resource fixture passes with 100.00% association, zero switches, merges, invalid accepts, and contract errors; runtime was approximately 11.3 seconds. Peak RSS remains unmeasured.
 - **Holdout result:** The 20-report, two-aircraft holdout passes with 100.00% association, zero switches, merges, invalid accepts, and contract errors without retuning.
-- **Remaining:** Measure coverage and peak memory, and complete resource/performance evidence.
+- **Coverage baseline:** The dedicated `ENABLE_COVERAGE` build and gcovr report currently measure 89.6% line, 100% function, and 53.9% branch coverage after running the unit suite, synthetic fixtures, and sample. The 100% line/branch target is not yet met.
+- **Remaining:** Increase coverage, measure peak memory, and complete resource/performance evidence.

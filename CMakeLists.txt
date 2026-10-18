@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+option(ENABLE_COVERAGE "Enable GCC line and branch coverage instrumentation" OFF)
+
 include(FetchContent)
 FetchContent_Declare(json
     URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
@@ -25,3 +27,10 @@ enable_testing()
 add_executable(correlator_tests tests/correlator_tests.cpp)
 target_link_libraries(correlator_tests PRIVATE correlator_core Catch2::Catch2WithMain)
 add_test(NAME correlator_tests COMMAND correlator_tests)
+
+if(ENABLE_COVERAGE)
+    foreach(target correlator_core correlator correlator_tests)
+        target_compile_options(${target} PRIVATE --coverage -O0 -g)
+        target_link_options(${target} PRIVATE --coverage)
+    endforeach()
+endif()
