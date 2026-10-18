@@ -2,7 +2,7 @@
 
 **Parent feature:** [F6 — Quality, Documentation, and Reproducibility](../features/f6-quality-documentation-and-reproducibility.md)  
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** In progress; Doxygen blocked in current environment
+**Status:** Complete
 
 ## Story
 
@@ -18,5 +18,12 @@ As a maintainer, I need code that follows the project’s C++ conventions and ex
 ## Progress record
 
 - clang-format and clang-tidy pass for the implemented C++ sources and project headers.
-- `Doxyfile` and an optional CMake `doxygen` target are now defined.
-- Generation is blocked in the current environment because the `doxygen` executable is not installed; the configured target is therefore unavailable until Doxygen is installed.
+- `Doxyfile` and an optional CMake `doxygen` target are defined.
+- Doxygen 1.9.6 was built locally with m4 1.4.19, Flex 2.6.4, and Bison 3.8.2.
+- The project documentation target passed and generated `build/docs/html/index.html`.
+
+## Completion record
+
+- **Result:** Doxygen HTML documentation generated successfully for the `src/` API and implementation files.
+- **Verification:** Project Debug configure/build and the `doxygen` target passed.
+- **Commit:** `804deaa` — `chore(S12): configure Doxygen documentation` (configuration); generation evidence completed in this milestone.

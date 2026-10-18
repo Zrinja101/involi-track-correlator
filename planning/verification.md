@@ -89,10 +89,10 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **F08 calibration:** 10,000-report/500-aircraft resource fixture passes functionally in approximately 11.3 seconds with zero contract errors; peak RSS remains unmeasured.
 - **Holdout calibration:** 20-report, two-aircraft identifier-free fixture passes with 100.00% association and zero contract errors without retuning.
 - **Coverage baseline:** Dedicated coverage build reports 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target is not met.
-- **Doxygen:** Configuration exists, but generation is blocked because the `doxygen` executable is unavailable.
+- **Doxygen:** Doxygen 1.9.6 generated `build/docs/html/index.html` successfully.
 - **Local Release:** Configure, build, and CTest pass with bounded parallelism.
 - **Docker:** Blocked because `docker` is unavailable in the current development container; Rancher Desktop host WSL verification requires a workspace copy or socket exposure.
-- **Not yet verified:** peak RSS evidence, 100% line/branch coverage, generated Doxygen output, Docker build, and final release readiness.
+- **Not yet verified:** peak RSS evidence, 100% line/branch coverage, Docker build, and final release readiness.
 
 ## Coverage policy
 
