@@ -125,8 +125,16 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Result:** Initial `FAIL` had 1 invalid accepted report out of 2. After explicit contradictory identity/position rejection, F06 scores `PASS`: 100.00% valid-report association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **Interpretation:** Basic domain rejection and contradictory-evidence rejection now protect real tracks in this fixture.
 
+## Calibration milestone: F07
+
+- **Fixture:** `data/synthetic/f07-delayed-bursts/`.
+- **Generator:** `tools/generate_calibration_fixtures.py --family f07`.
+- **Scenario:** Seven observations with equal arrival times, burst delivery across exact two-second deadlines, independent receiver timestamps, and EOF flushing.
+- **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Interpretation:** The scheduler and pipeline preserve the contract through equal-time reports, delayed bursts, and deadline boundaries.
+
 ## Open items
 
-- Add fixture families F07–F08 and holdout coverage.
+- Add fixture family F08 and holdout coverage.
 - Select final parameter values after the complete fixture set exists.
 - Define peak-state and runtime measurements for F08.

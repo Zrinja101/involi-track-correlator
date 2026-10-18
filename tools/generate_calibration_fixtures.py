@@ -223,12 +223,33 @@ def generate_f06(output_dir):
     write_jsonl(output_dir / "truth.jsonl", truths)
 
 
+def generate_f07(output_dir):
+    reports = []
+    truths = []
+    arrival_times_secs = [800.0, 800.0, 800.5, 802.0, 802.001, 802.5, 804.0]
+    for index, arr_secs in enumerate(arrival_times_secs):
+        reports.append(
+            {
+                "arr": arr_secs,
+                "rx": "R1" if index % 2 == 0 else "R3",
+                "t": 1000.0 - index * 3.25,
+                "id": "AC11",
+                "lat": 47.9,
+                "lon": 7.9 + (arr_secs - 800.0) * 0.0001,
+                "alt": 900.0,
+            }
+        )
+        truths.append({"report": index, "aircraft": "AC11"})
+    write_jsonl(output_dir / "reports.jsonl", reports)
+    write_jsonl(output_dir / "truth.jsonl", truths)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output_dir", type=pathlib.Path)
     parser.add_argument(
         "--family",
-        choices=("f01", "f02", "f03", "f04", "f05", "f06"),
+        choices=("f01", "f02", "f03", "f04", "f05", "f06", "f07"),
         default="f01",
     )
     args = parser.parse_args()
@@ -243,8 +264,10 @@ def main():
         generate_f04(args.output_dir)
     elif args.family == "f05":
         generate_f05(args.output_dir)
-    else:
+    elif args.family == "f06":
         generate_f06(args.output_dir)
+    else:
+        generate_f07(args.output_dir)
 
 
 if __name__ == "__main__":

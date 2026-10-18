@@ -24,4 +24,5 @@ Synthetic fixture families, calibration procedure, and holdout policy must follo
 - **Results:** F01–F03 each score `PASS` with 100.00% association and zero switches; F04 scores `PASS` with 100.00% association and one expected retirement switch. All have zero merged tracks, invalid accepted reports, and contract errors.
 - **F05 finding:** The initial crossing fixture failed at 50.00% with one merged track. The 500 m gate plus exact-tie-only ambiguity rejection now produces 100.00% association with no merges or switches. The sample dataset remains below target and is still an active calibration input.
 - **F06 result:** The initial `1 / 2` invalid acceptance is fixed by explicit contradictory identity/position rejection; F06 now passes with zero invalid accepted reports.
-- **Remaining:** Add F07–F08, add holdout fixtures, measure coverage, and collect resource/performance evidence.
+- **F07 result:** Delayed-burst and deadline-boundary fixture passes with 100.00% association, zero switches, zero merges, zero invalid accepted reports, and zero contract errors.
+- **Remaining:** Add F08, add holdout fixtures, measure coverage, and collect resource/performance evidence.

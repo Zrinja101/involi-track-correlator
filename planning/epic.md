@@ -46,6 +46,7 @@ The correlator must make each decision within two seconds of report arrival, emi
 - F05 synthetic calibration: `PASS`; the 500 m distance gate plus exact-tie-only ambiguity rejection produces 100.00% association, 0 ID switches, and 0 merged tracks.
 - Current sample regression: 84.81% association, 121 ID switches, 3 merged tracks, 0 invalid accepted reports, and 0 contract errors; the overall sample scorer remains `FAIL` because the 99% association and merged-track requirements are not yet met.
 - F06 synthetic calibration: `PASS`; contradictory identity/position rejection produces 100.00% valid-report association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- F07 synthetic calibration: `PASS`; delayed bursts and deadline boundaries produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - Remaining epic work: synthetic calibration fixtures, threshold/resource calibration, coverage measurement, Doxygen, performance/memory evidence, Docker verification, and final review.
 
 ### Completion-record policy
