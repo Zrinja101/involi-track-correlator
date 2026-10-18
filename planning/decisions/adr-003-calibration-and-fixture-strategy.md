@@ -93,8 +93,16 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **Interpretation:** The current pipeline remains stable when receiver timestamps differ from arrival time in this controlled case. No receiver-clock estimator has been calibrated yet; the result demonstrates tolerance, not clock-offset estimation quality.
 
+## Calibration milestone: F03
+
+- **Fixture:** `data/synthetic/f03-identifiers/`.
+- **Generator:** `tools/generate_calibration_fixtures.py --family f03`.
+- **Scenario:** 24 interleaved observations for three aircraft: one without an identifier before it appears and changes, plus two aircraft sharing `DUP`.
+- **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Interpretation:** The current history-aware identifier logic preserves continuity and separates duplicate identifiers in this controlled geometry.
+
 ## Open items
 
-- Add fixture families F03–F08 and holdout coverage.
+- Add fixture families F04–F08 and holdout coverage.
 - Select final parameter values after the complete fixture set exists.
 - Define peak-state and runtime measurements for F08.

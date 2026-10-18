@@ -79,7 +79,8 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **S10 sample scorer:** 63.21% association, 2 ID switches, 4 merged tracks, 1 invalid accepted report out of 15, and 0 contract errors; overall `FAIL` against the 99% association and merged-track targets.
 - **F01 calibration:** 10-report single-aircraft fixture passes with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **F02 calibration:** 12-report, three-receiver clock-offset fixture passes with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
-- **Not yet verified:** F03–F08 calibration fixtures, 100% line/branch coverage, Doxygen, long-stream memory/performance, Docker build, and final release readiness.
+- **F03 calibration:** 24-report identifier-change and duplicate-identifier fixture passes with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Not yet verified:** F04–F08 calibration fixtures, 100% line/branch coverage, Doxygen, long-stream memory/performance, Docker build, and final release readiness.
 
 ## Coverage policy
 

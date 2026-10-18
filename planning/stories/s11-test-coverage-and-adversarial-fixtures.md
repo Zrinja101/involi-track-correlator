@@ -19,7 +19,7 @@ Synthetic fixture families, calibration procedure, and holdout policy must follo
 
 ## Progress record
 
-- **Completed fixture families:** F01 single-aircraft baseline; F02 multiple receivers and clock offsets.
-- **Evidence:** `tools/generate_calibration_fixtures.py` deterministically generates both checked-in fixture directories.
-- **Results:** F01 and F02 each score `PASS` with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
-- **Remaining:** F03–F08, holdout fixtures, coverage measurement, and resource/performance evidence.
+- **Completed fixture families:** F01 single-aircraft baseline; F02 multiple receivers and clock offsets; F03 identifier changes and duplicates.
+- **Evidence:** `tools/generate_calibration_fixtures.py` deterministically generates all three checked-in fixture directories.
+- **Results:** F01, F02, and F03 each score `PASS` with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Remaining:** F04–F08, holdout fixtures, coverage measurement, and resource/performance evidence.
