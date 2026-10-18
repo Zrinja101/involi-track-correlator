@@ -109,8 +109,17 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Result:** `PASS`; 100.00% association, 1 ID switch, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **Interpretation:** The track store retains continuity through shorter gaps and safely recreates a track after retirement. The one switch is expected at the configured retirement boundary and remains within the scorer limit.
 
+## Calibration milestone: F05
+
+- **Fixture:** `data/synthetic/f05-crossing/`.
+- **Generator:** `tools/generate_calibration_fixtures.py --family f05`.
+- **Scenario:** 24 interleaved observations for two aircraft crossing at close range while broadcasting the same identifier.
+- **Result:** `FAIL`; 50.00% association, 0 ID switches, 1 merged track, 0 invalid accepted reports, and 0 contract errors.
+- **Interpretation:** The current greedy end-to-end pipeline merges the two aircraft into one track. This is an expected calibration failure and requires bounded conflict assignment, stronger ambiguity handling, or improved candidate separation before F05 can pass.
+
 ## Open items
 
-- Add fixture families F05–F08 and holdout coverage.
+- Add fixture families F06–F08 and holdout coverage.
+- Address the F05 merged-track failure before freezing scoring parameters.
 - Select final parameter values after the complete fixture set exists.
 - Define peak-state and runtime measurements for F08.

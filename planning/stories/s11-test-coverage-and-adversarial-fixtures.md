@@ -20,6 +20,7 @@ Synthetic fixture families, calibration procedure, and holdout policy must follo
 ## Progress record
 
 - **Completed fixture families:** F01 single-aircraft baseline; F02 multiple receivers and clock offsets; F03 identifier changes and duplicates; F04 gaps and retirement.
-- **Evidence:** `tools/generate_calibration_fixtures.py` deterministically generates all four checked-in fixture directories.
+- **Evidence:** `tools/generate_calibration_fixtures.py` deterministically generates the checked-in fixture directories.
 - **Results:** F01–F03 each score `PASS` with 100.00% association and zero switches; F04 scores `PASS` with 100.00% association and one expected retirement switch. All have zero merged tracks, invalid accepted reports, and contract errors.
-- **Remaining:** F05–F08, holdout fixtures, coverage measurement, and resource/performance evidence.
+- **F05 finding:** The crossing fixture currently fails at 50.00% association with one merged track; this is retained as an actionable calibration regression.
+- **Remaining:** Address F05, add F06–F08, add holdout fixtures, measure coverage, and collect resource/performance evidence.
