@@ -5,7 +5,7 @@
 
 ## Goal
 
-Maintain stable track identities and associate reports using evidence from identifiers, time, position, receiver history, and track predictions.
+Maintain stable track identities and associate reports using the hybrid staged model defined in [ADR-002](../decisions/adr-002-association-model-and-bounds.md): local geographic prediction, bounded track history, receiver-clock evidence, deterministic scoring, and conservative ambiguity rejection.
 
 ## Requirements
 

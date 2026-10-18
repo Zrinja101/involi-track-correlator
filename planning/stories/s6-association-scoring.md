@@ -8,6 +8,8 @@
 
 As the correlator, I need deterministic candidate scoring so reports are associated using explainable temporal, geographic, receiver, and identity evidence.
 
+The implementation must follow [ADR-002](../decisions/adr-002-association-model-and-bounds.md), including local-coordinate prediction, candidate gates, normalized evidence, minimum-score and margin checks, and bounded conflict assignment.
+
 ## Acceptance criteria
 
 - Candidate generation excludes impossible or stale tracks.

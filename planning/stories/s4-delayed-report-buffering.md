@@ -8,6 +8,8 @@
 
 As the correlator, I need bounded pending state so delayed receiver reports can improve association without allowing memory or decision latency to grow without limit.
 
+Pending deadlines and conflict-component bounds must follow [ADR-002](../decisions/adr-002-association-model-and-bounds.md).
+
 ## Acceptance criteria
 
 - Late receiver timestamps do not change the arrival-clock contract.

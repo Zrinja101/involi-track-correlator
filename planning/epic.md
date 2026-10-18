@@ -120,3 +120,4 @@ These decisions were selected to balance track quality, explainability, determin
 
 - [Verification plan](verification.md)
 - [Architecture decision record](decisions/adr-001-correlator-architecture.md)
+- [Association model and resource bounds](decisions/adr-002-association-model-and-bounds.md)

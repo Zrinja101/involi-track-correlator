@@ -53,9 +53,6 @@ The hybrid staged strategy is preferred because it combines the explainability, 
 
 The modular design creates test seams for each contract boundary and permits deterministic replay. The selected strategy requires explicit policies for candidate gates, score normalization, ambiguity thresholds, deadline finalization, stale-track eviction, and receiver-clock estimation. Conservative rejection may lower recall in ambiguous cases, but it protects track integrity and the invalid-report metric.
 
-## Open questions
+## Follow-up design
 
-- Which geographic prediction model provides sufficient accuracy without external dependencies?
-- What retention window and active-track cap satisfy the scorer while guaranteeing bounded memory?
-- What deterministic assignment method is sufficient for the bounded pending window?
-- What score margin or confidence rule distinguishes assignment from ambiguity?
+The implementation-level geographic model, receiver-clock treatment, conflict assignment policy, and resource bounds are proposed in [ADR-002](adr-002-association-model-and-bounds.md). Numerical defaults remain subject to fixture calibration before implementation.

@@ -8,6 +8,8 @@
 
 As the correlator, I need bounded active-track state with stable names, updates, stale retirement, and safe recreation.
 
+History retention, active-track limits, and retirement behavior must follow the resource-bound policy in [ADR-002](../decisions/adr-002-association-model-and-bounds.md).
+
 ## Acceptance criteria
 
 - New tracks receive unique deterministic names.
