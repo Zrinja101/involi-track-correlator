@@ -20,6 +20,16 @@ AssociationScorer::AssociationScorer(AssociationConfig config)
 AssociationResult AssociationScorer::Evaluate(
     const Report& report, std::span<const TrackState> tracks) const {
   AssociationResult result;
+  bool identifier_matches_active_track = false;
+  if (report.identifier.has_value()) {
+    for (const TrackState& track : tracks) {
+      if (IdentifierMatcher::Compare(report, track) ==
+          IdentifierRelation::kMatch) {
+        identifier_matches_active_track = true;
+        break;
+      }
+    }
+  }
   for (const TrackState& track : tracks) {
     const double age_secs =
         report.arrival_time_secs - track.latest_report.arrival_time_secs;
@@ -36,6 +46,11 @@ AssociationResult AssociationScorer::Evaluate(
     const double age_score = 1.0 - age_secs / config_.max_track_age_secs;
     const IdentifierRelation identifier_relation =
         IdentifierMatcher::Compare(report, track);
+    if (identifier_matches_active_track &&
+        identifier_relation == IdentifierRelation::kConflict) {
+      result.rejected_for_identifier_conflict = true;
+      continue;
+    }
     const double identifier_score =
         identifier_relation == IdentifierRelation::kMatch      ? 1.0
         : identifier_relation == IdentifierRelation::kConflict ? 0.0

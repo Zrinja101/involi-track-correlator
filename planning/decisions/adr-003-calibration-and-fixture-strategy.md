@@ -122,12 +122,11 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Fixture:** `data/synthetic/f06-corruption/`.
 - **Generator:** `tools/generate_calibration_fixtures.py --family f06`.
 - **Scenario:** Eight reports with two valid aircraft, an out-of-range coordinate, and a corrupted report that uses one aircraft’s identifier at the other aircraft’s position.
-- **Result:** `FAIL`; 100.00% association for valid reports, 0 ID switches, 0 merged tracks, 1 invalid accepted report out of 2, and 0 contract errors.
-- **Interpretation:** Basic domain rejection works, but contradictory identity/position evidence can still accept a corrupted report into a real track. This blocks final validation calibration.
+- **Result:** Initial `FAIL` had 1 invalid accepted report out of 2. After explicit contradictory identity/position rejection, F06 scores `PASS`: 100.00% valid-report association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Interpretation:** Basic domain rejection and contradictory-evidence rejection now protect real tracks in this fixture.
 
 ## Open items
 
 - Add fixture families F07–F08 and holdout coverage.
-- Address F06 contradictory-evidence rejection before freezing parameters.
 - Select final parameter values after the complete fixture set exists.
 - Define peak-state and runtime measurements for F08.

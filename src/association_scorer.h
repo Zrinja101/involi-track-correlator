@@ -36,6 +36,7 @@ struct AssociationCandidate {
 struct AssociationResult {
   std::optional<std::string> assigned_track_id;
   std::vector<AssociationCandidate> candidates;
+  bool rejected_for_identifier_conflict = false;
 };
 
 // Ranks feasible tracks using deterministic time, position, and identity

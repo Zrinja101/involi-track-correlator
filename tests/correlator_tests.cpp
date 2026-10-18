@@ -587,6 +587,28 @@ TEST_CASE(
         correlator::IdentifierRelation::kConflict);
 }
 
+TEST_CASE("AssociationScorer rejects contradictory identity and position") {
+  correlator::Report report = MakeValidReport();
+  report.identifier = "KNOWN";
+  report.longitude_degs = 7.1001;
+  correlator::Report matching_report = MakeValidReport();
+  matching_report.identifier = "KNOWN";
+  correlator::Report conflicting_report = MakeValidReport();
+  conflicting_report.identifier = "OTHER";
+  conflicting_report.longitude_degs = 7.1001;
+  const std::vector<correlator::TrackState> tracks = {
+      MakeTrack("Tknown", matching_report),
+      MakeTrack("Tother", conflicting_report),
+  };
+
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(report, tracks);
+
+  CHECK(result.candidates.empty());
+  CHECK(result.rejected_for_identifier_conflict);
+  CHECK_FALSE(result.assigned_track_id.has_value());
+}
+
 TEST_CASE("AnswerWriter serializes assigned and rejected answers") {
   std::ostringstream output;
   correlator::AnswerWriter::Write(

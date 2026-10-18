@@ -26,60 +26,60 @@ int main() try {
   double last_at_secs = 0.0;
   bool has_last_at = false;
 
-  const auto write_decisions =
-      [&](const std::vector<correlator::Decision>& decisions) {
-        for (const correlator::Decision& decision : decisions) {
-          const auto pending_iterator =
-              pending_reports.find(decision.report_index);
-          if (pending_iterator == pending_reports.end()) {
-            std::cerr << "report " << decision.report_index
-                      << ": pending report unavailable\n";
-            continue;
-          }
+  const auto write_decisions = [&](const std::vector<correlator::Decision>&
+                                       decisions) {
+    for (const correlator::Decision& decision : decisions) {
+      const auto pending_iterator = pending_reports.find(decision.report_index);
+      if (pending_iterator == pending_reports.end()) {
+        std::cerr << "report " << decision.report_index
+                  << ": pending report unavailable\n";
+        continue;
+      }
 
-          correlator::Report report = std::move(pending_iterator->second);
-          pending_reports.erase(pending_iterator);
-          static_cast<void>(
-              track_store.RetireStaleTracks(report.arrival_time_secs));
-          const std::vector<correlator::TrackState> tracks =
-              track_store.Snapshot();
-          const correlator::AssociationResult association =
-              association_scorer.Evaluate(report, tracks);
-          std::optional<std::string> track_id;
+      correlator::Report report = std::move(pending_iterator->second);
+      pending_reports.erase(pending_iterator);
+      static_cast<void>(
+          track_store.RetireStaleTracks(report.arrival_time_secs));
+      const std::vector<correlator::TrackState> tracks = track_store.Snapshot();
+      const correlator::AssociationResult association =
+          association_scorer.Evaluate(report, tracks);
+      std::optional<std::string> track_id;
 
-          if (association.assigned_track_id.has_value()) {
-            const correlator::TrackState* track =
-                track_store.FindTrack(association.assigned_track_id.value());
-            if (track != nullptr &&
-                plausibility_validator.Validate(report, track->latest_report)
-                    .IsValid() &&
-                track_store.UpdateTrack(association.assigned_track_id.value(),
-                                        report)) {
-              track_id = association.assigned_track_id;
-            } else {
-              std::cerr << "report " << report.report_index
-                        << ": rejected as implausible for candidate track\n";
-            }
-          } else if (association.candidates.empty()) {
-            track_id = track_store.CreateTrack(report);
-            if (!track_id.has_value()) {
-              std::cerr << "report " << report.report_index
-                        << ": active-track capacity reached\n";
-            }
-          } else {
-            std::cerr << "report " << report.report_index
-                      << ": rejected as ambiguous\n";
-          }
-
-          correlator::AnswerWriter::Write(
-              std::cout,
-              correlator::Answer{.report_index = decision.report_index,
-                                 .track_id = track_id,
-                                 .at_secs = decision.at_secs});
-          last_at_secs = decision.at_secs;
-          has_last_at = true;
+      if (association.assigned_track_id.has_value()) {
+        const correlator::TrackState* track =
+            track_store.FindTrack(association.assigned_track_id.value());
+        if (track != nullptr &&
+            plausibility_validator.Validate(report, track->latest_report)
+                .IsValid() &&
+            track_store.UpdateTrack(association.assigned_track_id.value(),
+                                    report)) {
+          track_id = association.assigned_track_id;
+        } else {
+          std::cerr << "report " << report.report_index
+                    << ": rejected as implausible for candidate track\n";
         }
-      };
+      } else if (association.rejected_for_identifier_conflict) {
+        std::cerr << "report " << report.report_index
+                  << ": rejected for contradictory identifier and position\n";
+      } else if (association.candidates.empty()) {
+        track_id = track_store.CreateTrack(report);
+        if (!track_id.has_value()) {
+          std::cerr << "report " << report.report_index
+                    << ": active-track capacity reached\n";
+        }
+      } else {
+        std::cerr << "report " << report.report_index
+                  << ": rejected as ambiguous\n";
+      }
+
+      correlator::AnswerWriter::Write(
+          std::cout, correlator::Answer{.report_index = decision.report_index,
+                                        .track_id = track_id,
+                                        .at_secs = decision.at_secs});
+      last_at_secs = decision.at_secs;
+      has_last_at = true;
+    }
+  };
 
   std::string line;
   while (std::getline(std::cin, line)) {

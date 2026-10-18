@@ -30,4 +30,4 @@ Prevent corrupted or physically implausible reports from contaminating real trac
 
 - **Completed stories:** S2, S8.
 - **Result:** Basic report-domain validation and contextual motion plausibility checks are implemented. Track mutation protection is enforced in the S10 pipeline.
-- **Verification:** Completion records reference `fe8c2ca` and `4229347`; S10 integration evidence is recorded in the S10 story. F06 currently exposes one invalid acceptance when identity and position contradict.
+- **Verification:** Completion records reference `fe8c2ca` and `4229347`; S10 integration evidence is recorded in the S10 story. The F06 contradictory identity/position acceptance is fixed by the S7/S8 integration follow-up.

@@ -29,5 +29,5 @@ Make correctness measurable and the finished project maintainable, reviewable, a
 
 - **Completed stories:** None yet; S11 is in progress and S12–S13 remain pending.
 - **Available evidence:** clang-format and clang-tidy have passed during S1–S10 implementation steps, the pinned dependency/build setup is recorded in `22d6374` and `bef9fa`, and F01 calibration passes.
-- **Current calibration result:** F01–F04 pass; F05 passes with 100.00% association, no merges, and no switches. F06 fails with 1 invalid accepted report out of 2 invalid reports. The sample regression is 84.58% association with 122 switches and remains below target.
+- **Current calibration result:** F01–F06 pass; F04 has one expected retirement switch. The sample regression is 84.81% association with 121 switches, 3 merged tracks, and zero invalid accepted reports, so it remains below target.
 - **Remaining work:** address F05, add fixture families F06–F08, measured line/branch coverage, Doxygen generation, performance/memory evidence, and Docker verification.
