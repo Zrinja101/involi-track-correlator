@@ -89,7 +89,8 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **F08 calibration:** 10,000-report/500-aircraft resource fixture passes functionally in approximately 11.3 seconds with zero contract errors; peak RSS remains unmeasured.
 - **Holdout calibration:** 20-report, two-aircraft identifier-free fixture passes with 100.00% association and zero contract errors without retuning.
 - **Coverage baseline:** Dedicated coverage build reports 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target is not met.
-- **Not yet verified:** peak RSS evidence, 100% line/branch coverage, Doxygen, Docker build, and final release readiness.
+- **Doxygen:** Configuration exists, but generation is blocked because the `doxygen` executable is unavailable.
+- **Not yet verified:** peak RSS evidence, 100% line/branch coverage, generated Doxygen output, Docker build, and final release readiness.
 
 ## Coverage policy
 

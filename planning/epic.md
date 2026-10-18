@@ -50,6 +50,7 @@ The correlator must make each decision within two seconds of report arrival, emi
 - F08 synthetic calibration: `PASS`; 10,000 reports across 500 aircraft produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors in approximately 11.3 seconds. Peak RSS is not yet measured.
 - Holdout calibration: `PASS`; 20 reports for two identifier-free aircraft produce 100.00% association, 0 switches, 0 merges, 0 invalid accepts, and 0 contract errors without retuning.
 - Coverage baseline: 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target remains open.
+- Doxygen setup: configured in `Doxyfile`, but generation is blocked because Doxygen is not installed in the current environment.
 - Remaining epic work: coverage improvement, Doxygen, peak-memory evidence, Docker verification, and final review.
 
 ### Completion-record policy

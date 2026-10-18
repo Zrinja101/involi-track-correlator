@@ -73,6 +73,17 @@ docker run --rm -i correlator < data/sample/reports.jsonl > output.jsonl
 Add dependencies through CMake (`FetchContent`, pinned to a tag or commit) or a vcpkg manifest
 (`vcpkg.json` with a `builtin-baseline`). Explain each dependency in one line in your README.
 
+## Documentation
+
+When Doxygen is installed, generate API documentation with:
+
+```sh
+cmake -S . -B build/Debug -G Ninja -DCMAKE_BUILD_TYPE=Debug
+cmake --build build/Debug --target doxygen
+```
+
+The generated HTML documentation is written under `build/docs/html/`.
+
 ## Coverage
 
 Configure a dedicated instrumented build and run the unit suite:

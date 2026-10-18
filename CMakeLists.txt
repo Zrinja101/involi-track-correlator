@@ -34,3 +34,11 @@ if(ENABLE_COVERAGE)
         target_link_options(${target} PRIVATE --coverage)
     endforeach()
 endif()
+
+find_package(Doxygen QUIET)
+if(Doxygen_FOUND)
+    add_custom_target(doxygen
+        COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Generating Doxygen documentation")
+endif()
