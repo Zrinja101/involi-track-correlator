@@ -8,6 +8,7 @@
 
 #include "arrival_scheduler.h"
 #include "association_scorer.h"
+#include "identifier_matcher.h"
 #include "report_parser.h"
 #include "report_validator.h"
 #include "track_store.h"
@@ -458,6 +459,74 @@ TEST_CASE("AssociationScorer rejects an ambiguous tie") {
   REQUIRE(result.candidates.size() == 2U);
   CHECK(result.candidates[0].score == result.candidates[1].score);
   CHECK_FALSE(result.assigned_track_id.has_value());
+}
+
+TEST_CASE("IdentifierMatcher recognizes an identifier from track history") {
+  correlator::Report old_report = MakeValidReport();
+  old_report.identifier = "OLD";
+  correlator::TrackState track = MakeTrack("T1", old_report);
+  track.latest_report.identifier = "NEW";
+  track.history.push_back(track.latest_report);
+
+  correlator::Report query = MakeValidReport();
+  query.identifier = "OLD";
+
+  CHECK(correlator::IdentifierMatcher::Compare(query, track) ==
+        correlator::IdentifierRelation::kMatch);
+}
+
+TEST_CASE("AssociationScorer retains a track across an identifier change") {
+  correlator::Report old_report = MakeValidReport();
+  old_report.identifier = "OLD";
+  correlator::TrackState track = MakeTrack("T1", old_report);
+  track.latest_report.identifier = "NEW";
+  track.history.push_back(track.latest_report);
+
+  correlator::Report query = MakeValidReport();
+  query.identifier = "OLD";
+  const std::vector<correlator::TrackState> tracks = {track};
+
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(query, tracks);
+
+  REQUIRE(result.assigned_track_id.has_value());
+  CHECK(result.assigned_track_id.value() == "T1");
+}
+
+TEST_CASE("AssociationScorer separates duplicate identifiers by position") {
+  correlator::Report query = MakeValidReport();
+  query.identifier = "DUPLICATE";
+  correlator::Report near_report = MakeValidReport();
+  near_report.identifier = "DUPLICATE";
+  correlator::Report far_report = near_report;
+  far_report.longitude_degs = 7.05;
+  const std::vector<correlator::TrackState> tracks = {
+      MakeTrack("Tnear", near_report),
+      MakeTrack("Tfar", far_report),
+  };
+
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(query, tracks);
+
+  REQUIRE(result.assigned_track_id.has_value());
+  CHECK(result.assigned_track_id.value() == "Tnear");
+}
+
+TEST_CASE(
+    "IdentifierMatcher distinguishes missing and conflicting identifiers") {
+  correlator::Report report = MakeValidReport();
+  correlator::TrackState track = MakeTrack("T1", report);
+
+  correlator::Report missing_identifier = report;
+  missing_identifier.identifier = std::nullopt;
+  CHECK(correlator::IdentifierMatcher::Compare(missing_identifier, track) ==
+        correlator::IdentifierRelation::kMissing);
+
+  report.identifier = "OTHER";
+  track.latest_report.identifier = "KNOWN";
+  track.history.front().identifier = "KNOWN";
+  CHECK(correlator::IdentifierMatcher::Compare(report, track) ==
+        correlator::IdentifierRelation::kConflict);
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,

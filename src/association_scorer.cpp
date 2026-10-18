@@ -4,6 +4,8 @@
 #include <cmath>
 #include <numbers>
 
+#include "identifier_matcher.h"
+
 namespace correlator {
 namespace {
 
@@ -32,12 +34,12 @@ AssociationResult AssociationScorer::Evaluate(
 
     const double distance_score = 1.0 - distance_m / config_.max_distance_m;
     const double age_score = 1.0 - age_secs / config_.max_track_age_secs;
-    double identifier_score = 0.5;
-    if (report.identifier.has_value() &&
-        track.latest_report.identifier.has_value()) {
-      identifier_score =
-          report.identifier == track.latest_report.identifier ? 1.0 : 0.0;
-    }
+    const IdentifierRelation identifier_relation =
+        IdentifierMatcher::Compare(report, track);
+    const double identifier_score =
+        identifier_relation == IdentifierRelation::kMatch      ? 1.0
+        : identifier_relation == IdentifierRelation::kConflict ? 0.0
+                                                               : 0.5;
     const double score = config_.distance_weight * distance_score +
                          config_.age_weight * age_score +
                          config_.identifier_weight * identifier_score;
