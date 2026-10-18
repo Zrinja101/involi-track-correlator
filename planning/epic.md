@@ -39,6 +39,7 @@ The correlator must make each decision within two seconds of report arrival, emi
 - CLI contract: passed.
 - Scorer contract errors: 0.
 - Sample metrics: 63.21% association, 2 ID switches, 4 merged tracks, and 1 invalid accepted report out of 15.
+- F01 synthetic calibration: `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - Overall sample scorer: `FAIL`; the 99% association and merged-track requirements are not yet met.
 - Remaining epic work: synthetic calibration fixtures, threshold/resource calibration, coverage measurement, Doxygen, performance/memory evidence, Docker verification, and final review.
 

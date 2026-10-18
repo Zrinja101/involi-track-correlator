@@ -77,7 +77,8 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **S10 commit:** `0b6e3e5` integrated the end-to-end pipeline.
 - **S10 unit/CLI verification:** 39 test cases, 148 assertions, and the executable CLI contract test passed.
 - **S10 sample scorer:** 63.21% association, 2 ID switches, 4 merged tracks, 1 invalid accepted report out of 15, and 0 contract errors; overall `FAIL` against the 99% association and merged-track targets.
-- **Not yet verified:** 100% line/branch coverage, Doxygen, long-stream memory/performance, Docker build, and final release readiness.
+- **F01 calibration:** 10-report single-aircraft fixture passes with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Not yet verified:** F02–F08 calibration fixtures, 100% line/branch coverage, Doxygen, long-stream memory/performance, Docker build, and final release readiness.
 
 ## Coverage policy
 

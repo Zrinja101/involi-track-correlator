@@ -2,7 +2,7 @@
 
 **Parent feature:** [F6 — Quality, Documentation, and Reproducibility](../features/f6-quality-documentation-and-reproducibility.md)  
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** Ready for design
+**Status:** In progress
 
 ## Story
 
@@ -16,3 +16,10 @@ Synthetic fixture families, calibration procedure, and holdout policy must follo
 - Production code reaches 100% line and branch coverage, with any exclusions documented.
 - Fixtures cover delays, unsynchronized clocks, missing/changing/duplicate IDs, close aircraft, gaps, corruption, and long streams.
 - Coverage commands are reproducible and documented.
+
+## Progress record
+
+- **Completed fixture family:** F01 single-aircraft baseline.
+- **Evidence:** `tools/generate_calibration_fixtures.py` deterministically generates `data/synthetic/f01-single-aircraft/`.
+- **Result:** Scorer `PASS` with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Remaining:** F02–F08, holdout fixtures, coverage measurement, and resource/performance evidence.

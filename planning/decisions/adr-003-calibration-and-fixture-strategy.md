@@ -1,6 +1,6 @@
 # ADR-003: Calibration and Synthetic Fixture Strategy
 
-**Status:** Proposed
+**Status:** In progress
 **Parent epic:** [Production Track Correlator](../epic.md)
 **Related design:** [ADR-002](adr-002-association-model-and-bounds.md)
 
@@ -77,8 +77,16 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - The test harness can reproduce calibration results from a clean build.
 - Calibration evidence is linked from the relevant stories and verification record.
 
+## Calibration milestone: F01
+
+- **Fixture:** `data/synthetic/f01-single-aircraft/`.
+- **Generator:** `tools/generate_calibration_fixtures.py`.
+- **Scenario:** 10 smooth observations for one aircraft, alternating receivers, stable identifier, and deterministic receiver-clock offsets.
+- **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Interpretation:** The current pipeline handles the uncomplicated single-aircraft baseline. This result does not calibrate or validate close-aircraft, identifier-collision, corruption, delay, or resource behavior.
+
 ## Open items
 
-- Implement the deterministic fixture generator or checked-in fixture files.
-- Define the truth schema and expected output assertions for each family.
-- Select final parameter values after the association engine exists.
+- Add fixture families F02–F08 and holdout coverage.
+- Select final parameter values after the complete fixture set exists.
+- Define peak-state and runtime measurements for F08.

@@ -27,6 +27,7 @@ Make correctness measurable and the finished project maintainable, reviewable, a
 
 ## Progress record
 
-- **Completed stories:** None yet; S11–S13 remain pending.
-- **Available evidence:** clang-format and clang-tidy have passed during S1–S10 implementation steps, and the pinned dependency/build setup is recorded in `22d6374` and `bef9fa`.
-- **Remaining work:** synthetic calibration fixtures, measured line/branch coverage, Doxygen generation, performance/memory evidence, and Docker verification.
+- **Completed stories:** None yet; S11 is in progress and S12–S13 remain pending.
+- **Available evidence:** clang-format and clang-tidy have passed during S1–S10 implementation steps, the pinned dependency/build setup is recorded in `22d6374` and `bef9fa`, and F01 calibration passes.
+- **Current calibration result:** F01 passes with 100.00% association and zero contract errors.
+- **Remaining work:** fixture families F02–F08, measured line/branch coverage, Doxygen generation, performance/memory evidence, and Docker verification.
