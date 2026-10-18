@@ -3,9 +3,11 @@
 #include <limits>
 #include <optional>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "arrival_scheduler.h"
+#include "association_scorer.h"
 #include "report_parser.h"
 #include "report_validator.h"
 #include "track_store.h"
@@ -127,6 +129,15 @@ correlator::Report MakeValidReport() {
       .latitude_degs = 47.0,
       .longitude_degs = 7.0,
       .altitude_m = 500.0,
+  };
+}
+
+correlator::TrackState MakeTrack(std::string track_id,
+                                 const correlator::Report& report) {
+  return correlator::TrackState{
+      .track_id = std::move(track_id),
+      .latest_report = report,
+      .history = {report},
   };
 }
 
@@ -360,6 +371,93 @@ TEST_CASE("TrackStore refuses new tracks at its active-track limit") {
 
   CHECK_FALSE(store.CreateTrack(report).has_value());
   CHECK(store.ActiveTrackCount() == 1U);
+}
+
+TEST_CASE("AssociationScorer selects the nearest feasible track") {
+  correlator::Report report = MakeValidReport();
+  report.latitude_degs = 47.0001;
+  report.longitude_degs = 7.0001;
+  const std::vector<correlator::TrackState> tracks = {
+      MakeTrack("Tnear", MakeValidReport()),
+      MakeTrack("Tfar",
+                [&] {
+                  correlator::Report far_report = MakeValidReport();
+                  far_report.longitude_degs = 7.05;
+                  return far_report;
+                }()),
+  };
+
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(report, tracks);
+
+  REQUIRE(result.assigned_track_id.has_value());
+  CHECK(result.assigned_track_id.value() == "Tnear");
+  REQUIRE(result.candidates.size() == 2U);
+  CHECK(result.candidates.front().track_id == "Tnear");
+}
+
+TEST_CASE(
+    "AssociationScorer uses matching identifiers as supporting evidence") {
+  correlator::Report report = MakeValidReport();
+  report.identifier = "MATCH";
+  correlator::Report nearer_report = MakeValidReport();
+  nearer_report.longitude_degs = 7.001;
+  correlator::Report matching_report = MakeValidReport();
+  matching_report.longitude_degs = 7.01;
+  matching_report.identifier = "MATCH";
+  const std::vector<correlator::TrackState> tracks = {
+      MakeTrack("Tnear", nearer_report),
+      MakeTrack("Tmatch", matching_report),
+  };
+
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(report, tracks);
+
+  REQUIRE(result.assigned_track_id.has_value());
+  CHECK(result.assigned_track_id.value() == "Tmatch");
+}
+
+TEST_CASE("AssociationScorer handles missing identifiers without bias") {
+  correlator::Report report = MakeValidReport();
+  const std::vector<correlator::TrackState> tracks = {
+      MakeTrack("Tnear", MakeValidReport()),
+  };
+
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(report, tracks);
+
+  REQUIRE(result.assigned_track_id.has_value());
+  CHECK(result.assigned_track_id.value() == "Tnear");
+}
+
+TEST_CASE("AssociationScorer excludes stale and distant tracks") {
+  correlator::Report report = MakeValidReport();
+  report.arrival_time_secs = 100.0;
+  report.longitude_degs = 8.0;
+  const std::vector<correlator::TrackState> tracks = {
+      MakeTrack("Tstale", MakeValidReport()),
+  };
+
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(report, tracks);
+
+  CHECK(result.candidates.empty());
+  CHECK_FALSE(result.assigned_track_id.has_value());
+}
+
+TEST_CASE("AssociationScorer rejects an ambiguous tie") {
+  const correlator::Report report = MakeValidReport();
+  const std::vector<correlator::TrackState> tracks = {
+      MakeTrack("T1", MakeValidReport()),
+      MakeTrack("T2", MakeValidReport()),
+  };
+
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(report, tracks);
+
+  REQUIRE(result.candidates.size() == 2U);
+  CHECK(result.candidates[0].score == result.candidates[1].score);
+  CHECK_FALSE(result.assigned_track_id.has_value());
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,

@@ -2,7 +2,7 @@
 
 **Parent feature:** [F3 — Track Association and Lifecycle](../features/f3-track-association-and-lifecycle.md)  
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** Ready for design
+**Status:** Implemented
 
 ## Story
 
@@ -20,5 +20,7 @@ The implementation must follow [ADR-002](../decisions/adr-002-association-model-
 
 ## Traceability
 
-- Source scope: association engine and supporting geographic/time utilities.
-- Tests: association unit tests and scorer regression fixtures.
+- Source scope: `src/association_scorer.h`, `src/association_scorer.cpp`, and the `correlator_core` CMake target.
+- Tests: `tests/correlator_tests.cpp`, covering distance ranking, identifier evidence, missing identifiers, stale/distant gates, and ambiguity rejection.
+- Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Initial scoring weights and gates are explicit constructor configuration and remain subject to ADR-003 calibration.
