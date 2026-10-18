@@ -9,6 +9,7 @@
 #include "arrival_scheduler.h"
 #include "association_scorer.h"
 #include "identifier_matcher.h"
+#include "plausibility_validator.h"
 #include "report_parser.h"
 #include "report_validator.h"
 #include "track_store.h"
@@ -216,6 +217,56 @@ TEST_CASE("ReportValidator rejects a non-finite altitude") {
   REQUIRE_FALSE(result.IsValid());
   REQUIRE(result.error.has_value());
   CHECK(result.error->code == correlator::ValidationErrorCode::kNonFiniteValue);
+}
+
+TEST_CASE("PlausibilityValidator accepts realistic movement") {
+  const correlator::Report previous_report = MakeValidReport();
+  correlator::Report report = previous_report;
+  report.arrival_time_secs = 11.0;
+  report.longitude_degs += 0.001;
+
+  CHECK(correlator::PlausibilityValidator()
+            .Validate(report, previous_report)
+            .IsValid());
+}
+
+TEST_CASE("PlausibilityValidator rejects an implausible horizontal jump") {
+  const correlator::Report previous_report = MakeValidReport();
+  correlator::Report report = previous_report;
+  report.arrival_time_secs = 11.0;
+  report.latitude_degs += 0.1;
+
+  const correlator::PlausibilityResult result =
+      correlator::PlausibilityValidator().Validate(report, previous_report);
+
+  REQUIRE_FALSE(result.IsValid());
+  REQUIRE(result.error.has_value());
+  CHECK(result.error->code ==
+        correlator::PlausibilityErrorCode::kHorizontalSpeedExceeded);
+}
+
+TEST_CASE("PlausibilityValidator rejects an implausible altitude jump") {
+  const correlator::Report previous_report = MakeValidReport();
+  correlator::Report report = previous_report;
+  report.arrival_time_secs = 11.0;
+  report.altitude_m = 1000.0;
+
+  const correlator::PlausibilityResult result =
+      correlator::PlausibilityValidator().Validate(report, previous_report);
+
+  REQUIRE_FALSE(result.IsValid());
+  REQUIRE(result.error.has_value());
+  CHECK(result.error->code ==
+        correlator::PlausibilityErrorCode::kVerticalSpeedExceeded);
+}
+
+TEST_CASE("PlausibilityValidator accepts duplicate-time stationary reports") {
+  const correlator::Report previous_report = MakeValidReport();
+  const correlator::PlausibilityResult result =
+      correlator::PlausibilityValidator().Validate(previous_report,
+                                                   previous_report);
+
+  CHECK(result.IsValid());
 }
 
 TEST_CASE("ArrivalScheduler waits until a report deadline") {

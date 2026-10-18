@@ -2,7 +2,7 @@
 
 **Parent feature:** [F4 — Validation and Rejection](../features/f4-validation-and-rejection.md)  
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** Ready for design
+**Status:** Implemented
 
 ## Story
 
@@ -15,3 +15,10 @@ As the correlator, I need to reject corrupted or implausible observations rather
 - Rejected reports do not update track history or predictions.
 - Valid boundary movement remains accepted.
 - Invalid-acceptance rate meets the scorer threshold.
+
+## Traceability
+
+- Source scope: `src/plausibility_validator.h`, `src/plausibility_validator.cpp`, and the `correlator_core` CMake target.
+- Tests: `tests/correlator_tests.cpp`, covering realistic movement, horizontal jumps, vertical jumps, and duplicate-time observations.
+- Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Initial speed limits are explicit configuration and remain subject to ADR-003 calibration. Integration with track mutation and null-track output is deferred to S9/S10.
