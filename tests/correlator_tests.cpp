@@ -1,9 +1,11 @@
 #include <catch2/catch_test_macros.hpp>
 #include <cstddef>
+#include <limits>
 #include <optional>
 #include <string>
 
 #include "report_parser.h"
+#include "report_validator.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,
 // readability-identifier-length, bugprone-easily-swappable-parameters)
@@ -108,6 +110,97 @@ TEST_CASE("ReportParser rejects an optional field with an incorrect type") {
   REQUIRE_FALSE(result.IsSuccess());
   REQUIRE(result.error.has_value());
   CHECK(result.error->code == correlator::ParseErrorCode::kInvalidType);
+}
+
+namespace {
+
+correlator::Report MakeValidReport() {
+  return correlator::Report{
+      .report_index = 0U,
+      .arrival_time_secs = 10.0,
+      .receiver = "R1",
+      .receiver_time_secs = 9.5,
+      .identifier = std::nullopt,
+      .latitude_degs = 47.0,
+      .longitude_degs = 7.0,
+      .altitude_m = 500.0,
+  };
+}
+
+}  // namespace
+
+TEST_CASE("ReportValidator accepts geographic domain boundaries") {
+  correlator::Report report = MakeValidReport();
+
+  report.latitude_degs = -90.0;
+  report.longitude_degs = -180.0;
+  CHECK(correlator::ReportValidator::Validate(report).IsValid());
+
+  report.latitude_degs = 90.0;
+  report.longitude_degs = 180.0;
+  CHECK(correlator::ReportValidator::Validate(report).IsValid());
+}
+
+TEST_CASE("ReportValidator rejects latitude outside its domain") {
+  correlator::Report report = MakeValidReport();
+  report.latitude_degs = 90.000001;
+
+  const correlator::ValidationResult result =
+      correlator::ReportValidator::Validate(report);
+
+  REQUIRE_FALSE(result.IsValid());
+  REQUIRE(result.error.has_value());
+  CHECK(result.error->code ==
+        correlator::ValidationErrorCode::kLatitudeOutOfRange);
+}
+
+TEST_CASE("ReportValidator rejects longitude outside its domain") {
+  correlator::Report report = MakeValidReport();
+  report.longitude_degs = -180.000001;
+
+  const correlator::ValidationResult result =
+      correlator::ReportValidator::Validate(report);
+
+  REQUIRE_FALSE(result.IsValid());
+  REQUIRE(result.error.has_value());
+  CHECK(result.error->code ==
+        correlator::ValidationErrorCode::kLongitudeOutOfRange);
+}
+
+TEST_CASE("ReportValidator rejects an empty receiver") {
+  correlator::Report report = MakeValidReport();
+  report.receiver.clear();
+
+  const correlator::ValidationResult result =
+      correlator::ReportValidator::Validate(report);
+
+  REQUIRE_FALSE(result.IsValid());
+  REQUIRE(result.error.has_value());
+  CHECK(result.error->code == correlator::ValidationErrorCode::kEmptyReceiver);
+}
+
+TEST_CASE("ReportValidator rejects non-finite report values") {
+  correlator::Report report = MakeValidReport();
+  report.arrival_time_secs = std::numeric_limits<double>::infinity();
+
+  const correlator::ValidationResult result =
+      correlator::ReportValidator::Validate(report);
+
+  REQUIRE_FALSE(result.IsValid());
+  REQUIRE(result.error.has_value());
+  CHECK(result.error->code == correlator::ValidationErrorCode::kNonFiniteValue);
+}
+
+TEST_CASE("ReportValidator rejects a non-finite altitude") {
+  correlator::Report report = MakeValidReport();
+  report.altitude_m = std::numeric_limits<double>::quiet_NaN();
+
+  const correlator::ValidationResult result =
+      correlator::ReportValidator::Validate(report);
+
+  REQUIRE_FALSE(result.IsValid());
+  REQUIRE(result.error.has_value());
+  CHECK(result.error->code == correlator::ValidationErrorCode::kNonFiniteValue);
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,
