@@ -114,8 +114,8 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Fixture:** `data/synthetic/f05-crossing/`.
 - **Generator:** `tools/generate_calibration_fixtures.py --family f05`.
 - **Scenario:** 24 interleaved observations for two aircraft crossing at close range while broadcasting the same identifier.
-- **Result:** `FAIL`; 50.00% association, 0 ID switches, 1 merged track, 0 invalid accepted reports, and 0 contract errors.
-- **Interpretation:** The current greedy end-to-end pipeline merges the two aircraft into one track. This is an expected calibration failure and requires bounded conflict assignment, stronger ambiguity handling, or improved candidate separation before F05 can pass.
+- **Result:** Initial `FAIL` was 50.00% association with 1 merged track. After the interim 500 m distance-gate calibration, F05 scores 91.67% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Interpretation:** The gate removes the merge, but ambiguity rejections remain. Bounded conflict assignment or improved crossing prediction is required before F05 can pass.
 
 ## Open items
 

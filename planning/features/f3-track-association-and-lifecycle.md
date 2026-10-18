@@ -31,4 +31,4 @@ Maintain stable track identities and associate reports using the hybrid staged m
 
 - **Completed stories:** S5, S6, S7.
 - **Result:** Track state, deterministic scoring, identity history, identifier changes, and duplicate-ID handling are implemented.
-- **Verification:** Completion records reference `8bd8183`, `c014e60`, and `0787590`. Sample-level calibration is not complete; S10 currently scores 63.21% association with 4 merged tracks.
+- **Verification:** Completion records reference `8bd8183`, `c014e60`, and `0787590`. Sample-level calibration is not complete; the F05 crossing fixture now scores 91.67% with no merges but still has ambiguity rejections.

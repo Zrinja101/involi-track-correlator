@@ -443,7 +443,9 @@ TEST_CASE("AssociationScorer selects the nearest feasible track") {
   };
 
   const correlator::AssociationResult result =
-      correlator::AssociationScorer().Evaluate(report, tracks);
+      correlator::AssociationScorer(
+          correlator::AssociationConfig{.max_distance_m = 10000.0})
+          .Evaluate(report, tracks);
 
   REQUIRE(result.assigned_track_id.has_value());
   CHECK(result.assigned_track_id.value() == "Tnear");
@@ -466,7 +468,9 @@ TEST_CASE(
   };
 
   const correlator::AssociationResult result =
-      correlator::AssociationScorer().Evaluate(report, tracks);
+      correlator::AssociationScorer(
+          correlator::AssociationConfig{.max_distance_m = 10000.0})
+          .Evaluate(report, tracks);
 
   REQUIRE(result.assigned_track_id.has_value());
   CHECK(result.assigned_track_id.value() == "Tmatch");

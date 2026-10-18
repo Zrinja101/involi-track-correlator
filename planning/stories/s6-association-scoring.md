@@ -30,3 +30,4 @@ The implementation must follow [ADR-002](../decisions/adr-002-association-model-
 - **Result:** Implemented deterministic local-coordinate distance scoring, constant-velocity prediction from history, age/distance gates, identifier evidence, minimum-score checks, and ambiguity margins.
 - **Verification:** 30 test cases and 127 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
 - **Commit:** `c014e60` — `feat(S6): add deterministic association scoring`
+- **Calibration follow-up:** The default distance gate is now 500 m; this is recorded in a separate calibration-fix commit after F05 reduced merging but still left ambiguity rejections.

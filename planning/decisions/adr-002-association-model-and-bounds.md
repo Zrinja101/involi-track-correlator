@@ -77,6 +77,10 @@ Use both time and count bounds:
 
 Initial numerical limits are implementation parameters to be selected by fixture calibration. They must be conservative enough for the scorer and finite enough to provide a hard memory bound.
 
+### F05 gate calibration note
+
+The default association distance gate was tightened from 10,000 m to 500 m after F05 exposed a same-identifier merge. This removed the merged track, but the crossing fixture still produces ambiguity rejections; the gate is an interim calibration result, not a final parameter freeze.
+
 ## Rationale
 
 A local coordinate model is simpler and more transparent than introducing a geographic library for the sample’s scale. Constant-velocity prediction uses available history without requiring a complex dynamics model. Robust receiver timing estimates account for the fact that delivery delay contaminates direct arrival-time differences. A bounded conflict assignment prevents greedy swaps without creating an unbounded global optimization problem. Explicit time and count limits satisfy the streaming memory contract.
