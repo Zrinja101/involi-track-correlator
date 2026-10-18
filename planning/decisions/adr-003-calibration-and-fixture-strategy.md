@@ -117,9 +117,17 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Result:** Initial `FAIL` was 50.00% association with 1 merged track. After the 500 m distance gate and zero-margin/exact-tie calibration, F05 scores `PASS`: 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **Interpretation:** Strictly better candidates are accepted during the crossing while exact score ties remain rejected. The sample dataset still requires further calibration because its switch rate remains high.
 
+## Calibration milestone: F06
+
+- **Fixture:** `data/synthetic/f06-corruption/`.
+- **Generator:** `tools/generate_calibration_fixtures.py --family f06`.
+- **Scenario:** Eight reports with two valid aircraft, an out-of-range coordinate, and a corrupted report that uses one aircraft’s identifier at the other aircraft’s position.
+- **Result:** `FAIL`; 100.00% association for valid reports, 0 ID switches, 0 merged tracks, 1 invalid accepted report out of 2, and 0 contract errors.
+- **Interpretation:** Basic domain rejection works, but contradictory identity/position evidence can still accept a corrupted report into a real track. This blocks final validation calibration.
+
 ## Open items
 
-- Add fixture families F06–F08 and holdout coverage.
-- Address the F05 merged-track failure before freezing scoring parameters.
+- Add fixture families F07–F08 and holdout coverage.
+- Address F06 contradictory-evidence rejection before freezing parameters.
 - Select final parameter values after the complete fixture set exists.
 - Define peak-state and runtime measurements for F08.

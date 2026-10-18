@@ -134,11 +134,102 @@ def generate_f05(output_dir):
     write_jsonl(output_dir / "truth.jsonl", truths)
 
 
+def generate_f06(output_dir):
+    reports = [
+        {
+            "arr": 700.0,
+            "rx": "R1",
+            "t": 699.5,
+            "id": "AC09",
+            "lat": 47.7,
+            "lon": 7.7,
+            "alt": 700.0,
+        },
+        {
+            "arr": 700.01,
+            "rx": "R2",
+            "t": 699.51,
+            "id": "AC10",
+            "lat": 47.8,
+            "lon": 7.8,
+            "alt": 800.0,
+        },
+        {
+            "arr": 701.0,
+            "rx": "R1",
+            "t": 700.5,
+            "id": "AC09",
+            "lat": 47.7001,
+            "lon": 7.7001,
+            "alt": 700.0,
+        },
+        {
+            "arr": 701.01,
+            "rx": "R2",
+            "t": 700.51,
+            "id": "AC10",
+            "lat": 47.8001,
+            "lon": 7.8001,
+            "alt": 800.0,
+        },
+        {
+            "arr": 701.5,
+            "rx": "R1",
+            "t": 701.0,
+            "id": "AC09",
+            "lat": 47.8001,
+            "lon": 7.8001,
+            "alt": 800.0,
+        },
+        {
+            "arr": 702.0,
+            "rx": "R1",
+            "t": 701.5,
+            "id": "AC09",
+            "lat": 95.0,
+            "lon": 7.7002,
+            "alt": 700.0,
+        },
+        {
+            "arr": 702.1,
+            "rx": "R1",
+            "t": 701.6,
+            "id": "AC09",
+            "lat": 47.7002,
+            "lon": 7.7002,
+            "alt": 700.0,
+        },
+        {
+            "arr": 702.11,
+            "rx": "R2",
+            "t": 701.61,
+            "id": "AC10",
+            "lat": 47.8002,
+            "lon": 7.8002,
+            "alt": 800.0,
+        },
+    ]
+    truths = [
+        {"report": 0, "aircraft": "AC09"},
+        {"report": 1, "aircraft": "AC10"},
+        {"report": 2, "aircraft": "AC09"},
+        {"report": 3, "aircraft": "AC10"},
+        {"report": 4, "aircraft": None},
+        {"report": 5, "aircraft": None},
+        {"report": 6, "aircraft": "AC09"},
+        {"report": 7, "aircraft": "AC10"},
+    ]
+    write_jsonl(output_dir / "reports.jsonl", reports)
+    write_jsonl(output_dir / "truth.jsonl", truths)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output_dir", type=pathlib.Path)
     parser.add_argument(
-        "--family", choices=("f01", "f02", "f03", "f04", "f05"), default="f01"
+        "--family",
+        choices=("f01", "f02", "f03", "f04", "f05", "f06"),
+        default="f01",
     )
     args = parser.parse_args()
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -150,8 +241,10 @@ def main():
         generate_f03(args.output_dir)
     elif args.family == "f04":
         generate_f04(args.output_dir)
-    else:
+    elif args.family == "f05":
         generate_f05(args.output_dir)
+    else:
+        generate_f06(args.output_dir)
 
 
 if __name__ == "__main__":

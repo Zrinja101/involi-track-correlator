@@ -83,7 +83,8 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **F04 calibration:** Five-report gap/retirement fixture passes with 100.00% association, 1 expected retirement switch, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **F05 calibration:** After tightening the default distance gate to 500 m and retaining only exact-tie rejection, the 24-report close-crossing/duplicate-ID fixture passes with 100.00% association, 0 merged tracks, 0 switches, and 0 contract errors.
 - **Sample regression after F05 fix:** 84.58% association, 122 ID switches, 4 merged tracks, 0 invalid accepted reports, and 0 contract errors; still below the epic target.
-- **Not yet verified:** F06–F08 calibration fixtures, 100% line/branch coverage, Doxygen, long-stream memory/performance, Docker build, and final release readiness.
+- **F06 calibration:** Eight-report corruption fixture has 1 invalid accepted report out of 2 and therefore fails the invalid-acceptance target; contract errors remain 0.
+- **Not yet verified:** F07–F08 calibration fixtures, 100% line/branch coverage, Doxygen, long-stream memory/performance, Docker build, and final release readiness.
 
 ## Coverage policy
 
