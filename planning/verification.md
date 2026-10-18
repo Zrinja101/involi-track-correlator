@@ -86,7 +86,8 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **F06 calibration:** After contradictory identity/position rejection, the eight-report corruption fixture passes with 100.00% valid-report association, 0 invalid accepted reports, and 0 contract errors.
 - **Sample regression after F06 fix:** 84.81% association, 121 ID switches, 3 merged tracks, 0 invalid accepted reports, and 0 contract errors; still below the epic target.
 - **F07 calibration:** Seven-report delayed-burst/deadline fixture passes with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
-- **Not yet verified:** F08 calibration fixture, 100% line/branch coverage, Doxygen, long-stream memory/performance, Docker build, and final release readiness.
+- **F08 calibration:** 10,000-report/500-aircraft resource fixture passes functionally in approximately 11.3 seconds with zero contract errors; peak RSS remains unmeasured.
+- **Not yet verified:** holdout fixtures, 100% line/branch coverage, Doxygen, long-stream memory/performance, Docker build, and final release readiness.
 
 ## Coverage policy
 

@@ -133,8 +133,18 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **Interpretation:** The scheduler and pipeline preserve the contract through equal-time reports, delayed bursts, and deadline boundaries.
 
+## Calibration milestone: F08
+
+- **Fixture:** `data/synthetic/f08-resource-stress/`.
+- **Generator:** `tools/generate_calibration_fixtures.py --family f08`.
+- **Scenario:** 10,000 reports for 500 aircraft, with bounded per-track history and sustained active state.
+- **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Runtime:** Approximately 11.3 seconds for the scorer pipeline in the current environment.
+- **Limitation:** Peak RSS was not measured because `/usr/bin/time` is unavailable; dedicated memory instrumentation remains required.
+
 ## Open items
 
-- Add fixture family F08 and holdout coverage.
+- Add holdout coverage.
 - Select final parameter values after the complete fixture set exists.
-- Define peak-state and runtime measurements for F08.
+- Collect peak-state/RSS evidence with an available measurement tool.
+- Complete S12 Doxygen and S13 Docker/reproducibility work.
