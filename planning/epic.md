@@ -47,7 +47,7 @@ The correlator must make each decision within two seconds of report arrival, emi
 - Current sample regression: 84.81% association, 121 ID switches, 3 merged tracks, 0 invalid accepted reports, and 0 contract errors; the overall sample scorer remains `FAIL` because the 99% association and merged-track requirements are not yet met.
 - F06 synthetic calibration: `PASS`; contradictory identity/position rejection produces 100.00% valid-report association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - F07 synthetic calibration: `PASS`; delayed bursts and deadline boundaries produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
-- F08 synthetic calibration: `PASS`; 10,000 reports across 500 aircraft produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors in approximately 11.3 seconds. Peak RSS is not yet measured.
+- F08 synthetic calibration: `PASS`; 10,000 reports across 500 aircraft produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors in approximately 11.3 seconds. Child-process peak RSS measured 10,856 KB; container-level profiling remains outstanding.
 - Holdout calibration: `PASS`; 20 reports for two identifier-free aircraft produce 100.00% association, 0 switches, 0 merges, 0 invalid accepts, and 0 contract errors without retuning.
 - Coverage baseline: 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target remains open.
 - Doxygen verification: Doxygen 1.9.6 generated `build/docs/html/index.html` successfully.

@@ -86,13 +86,13 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **F06 calibration:** After contradictory identity/position rejection, the eight-report corruption fixture passes with 100.00% valid-report association, 0 invalid accepted reports, and 0 contract errors.
 - **Sample regression after F06 fix:** 84.81% association, 121 ID switches, 3 merged tracks, 0 invalid accepted reports, and 0 contract errors; still below the epic target.
 - **F07 calibration:** Seven-report delayed-burst/deadline fixture passes with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
-- **F08 calibration:** 10,000-report/500-aircraft resource fixture passes functionally in approximately 11.3 seconds with zero contract errors; peak RSS remains unmeasured.
+- **F08 calibration:** 10,000-report/500-aircraft resource fixture passes functionally in approximately 11.3 seconds with zero contract errors; Python child-process measurement recorded 10,856 KB peak RSS.
 - **Holdout calibration:** 20-report, two-aircraft identifier-free fixture passes with 100.00% association and zero contract errors without retuning.
 - **Coverage baseline:** Dedicated coverage build reports 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target is not met.
 - **Doxygen:** Doxygen 1.9.6 generated `build/docs/html/index.html` successfully.
 - **Local Release:** Configure, build, and CTest pass with bounded parallelism.
 - **Docker:** Blocked because `docker` is unavailable in the current development container; Rancher Desktop host WSL verification requires a workspace copy or socket exposure.
-- **Not yet verified:** peak RSS evidence, 100% line/branch coverage, Docker build, and final release readiness.
+- **Not yet verified:** 100% line/branch coverage, Docker build, and final release readiness; container-level memory profiling remains a secondary evidence gap.
 
 ## Coverage policy
 

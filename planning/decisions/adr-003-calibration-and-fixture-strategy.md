@@ -140,7 +140,8 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Scenario:** 10,000 reports for 500 aircraft, with bounded per-track history and sustained active state.
 - **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **Runtime:** Approximately 11.3 seconds for the scorer pipeline in the current environment.
-- **Limitation:** Peak RSS was not measured because `/usr/bin/time` is unavailable; dedicated memory instrumentation remains required.
+- **Memory evidence:** A Python `resource.RUSAGE_CHILDREN` measurement recorded a peak child RSS of 10,856 KB for the correlator.
+- **Limitation:** This is a process-level Linux RSS measurement, not a full container memory profile; Docker/container resource evidence remains required.
 
 ## Holdout milestone
 

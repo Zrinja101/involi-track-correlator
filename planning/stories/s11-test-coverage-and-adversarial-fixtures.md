@@ -25,7 +25,8 @@ Synthetic fixture families, calibration procedure, and holdout policy must follo
 - **F05 finding:** The initial crossing fixture failed at 50.00% with one merged track. The 500 m gate plus exact-tie-only ambiguity rejection now produces 100.00% association with no merges or switches. The sample dataset remains below target and is still an active calibration input.
 - **F06 result:** The initial `1 / 2` invalid acceptance is fixed by explicit contradictory identity/position rejection; F06 now passes with zero invalid accepted reports.
 - **F07 result:** Delayed-burst and deadline-boundary fixture passes with 100.00% association, zero switches, zero merges, zero invalid accepted reports, and zero contract errors.
-- **F08 result:** 10,000-report/500-aircraft resource fixture passes with 100.00% association, zero switches, merges, invalid accepts, and contract errors; runtime was approximately 11.3 seconds. Peak RSS remains unmeasured.
+- **F08 result:** 10,000-report/500-aircraft resource fixture passes with 100.00% association, zero switches, merges, invalid accepts, and contract errors; runtime was approximately 11.3 seconds.
+- **F08 memory evidence:** Python child-process resource measurement recorded 10,856 KB peak RSS for the correlator. Container-level memory evidence remains outstanding.
 - **Holdout result:** The 20-report, two-aircraft holdout passes with 100.00% association, zero switches, merges, invalid accepts, and contract errors without retuning.
 - **Coverage baseline:** The dedicated `ENABLE_COVERAGE` build and gcovr report currently measure 89.6% line, 100% function, and 53.9% branch coverage after running the unit suite, synthetic fixtures, and sample. The 100% line/branch target is not yet met.
 - **Remaining:** Increase coverage, measure peak memory, and complete resource/performance evidence.
