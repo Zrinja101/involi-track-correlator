@@ -67,6 +67,10 @@ python3 tools/score.py data/sample output.jsonl
 - Corrupted positions and implausible jumps.
 - Long streams for memory behavior.
 
+## Calibration and fixture evidence
+
+Calibration runs must use the fixture families and holdout procedure defined in [ADR-003](decisions/adr-003-calibration-and-fixture-strategy.md). Each run must record the parameter set, fixture revision, scorer metrics, contract errors, runtime, and peak state.
+
 ## Coverage policy
 
 Measure coverage for production code only. Generated dependency code, external Catch2 code, and intentionally excluded integration shims must not be counted, and every exclusion must be documented. The target is 100% line and branch coverage. Coverage is evidence of exercised paths, not a substitute for meaningful behavioral assertions.

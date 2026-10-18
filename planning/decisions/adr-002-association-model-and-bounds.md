@@ -98,6 +98,8 @@ The implementation remains dependency-light, deterministic, and independently te
 
 ## Open items before implementation
 
+Parameter selection and holdout-fixture policy are defined in [ADR-003](adr-003-calibration-and-fixture-strategy.md).
+
 - Select numerical defaults for gates, weights, margins, uncertainty growth, retention windows, and component bounds from tests.
 - Confirm whether altitude should contribute to the initial score or remain a later enhancement.
 - Define the exact deterministic tie-break order and evidence logging/test seam.

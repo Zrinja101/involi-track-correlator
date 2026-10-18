@@ -8,6 +8,8 @@
 
 As a maintainer, I need comprehensive automated tests and measurable coverage so correctness does not depend on the sample dataset.
 
+Synthetic fixture families, calibration procedure, and holdout policy must follow [ADR-003](../decisions/adr-003-calibration-and-fixture-strategy.md).
+
 ## Acceptance criteria
 
 - Catch2 tests cover normal paths, error paths, boundary values, and README-listed failure modes.
