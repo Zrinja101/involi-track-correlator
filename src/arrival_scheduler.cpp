@@ -1,0 +1,64 @@
+#include "arrival_scheduler.h"
+
+#include <algorithm>
+#include <utility>
+
+namespace correlator {
+
+std::vector<Decision> ArrivalScheduler::Submit(std::size_t report_index,
+                                               double arrival_time_secs) {
+  std::vector<Decision> decisions = AdvanceTo(arrival_time_secs);
+  pending_.push_back(PendingDecision{
+      .report_index = report_index,
+      .deadline_secs = arrival_time_secs + kDecisionWindowSecs,
+  });
+  return decisions;
+}
+
+std::vector<Decision> ArrivalScheduler::AdvanceTo(double arrival_time_secs) {
+  if (!has_current_time_ || arrival_time_secs > current_time_secs_) {
+    current_time_secs_ = arrival_time_secs;
+    has_current_time_ = true;
+  }
+  return FinalizeDue(false);
+}
+
+std::vector<Decision> ArrivalScheduler::Flush() { return FinalizeDue(true); }
+
+std::vector<Decision> ArrivalScheduler::FinalizeDue(bool finalize_all) {
+  std::vector<PendingDecision> due;
+  std::vector<PendingDecision> remaining;
+  due.reserve(pending_.size());
+  remaining.reserve(pending_.size());
+
+  for (const PendingDecision& pending : pending_) {
+    if (finalize_all || pending.deadline_secs <= current_time_secs_) {
+      due.push_back(pending);
+    } else {
+      remaining.push_back(pending);
+    }
+  }
+  pending_ = std::move(remaining);
+  std::sort(due.begin(), due.end(),
+            [](const PendingDecision& first, const PendingDecision& second) {
+              if (first.deadline_secs != second.deadline_secs) {
+                return first.deadline_secs < second.deadline_secs;
+              }
+              return first.report_index < second.report_index;
+            });
+
+  std::vector<Decision> decisions;
+  decisions.reserve(due.size());
+  for (const PendingDecision& pending : due) {
+    const double at_secs = has_last_at_
+                               ? std::max(last_at_secs_, pending.deadline_secs)
+                               : pending.deadline_secs;
+    decisions.push_back(
+        Decision{.report_index = pending.report_index, .at_secs = at_secs});
+    last_at_secs_ = at_secs;
+    has_last_at_ = true;
+  }
+  return decisions;
+}
+
+}  // namespace correlator

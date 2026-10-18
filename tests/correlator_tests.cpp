@@ -3,7 +3,9 @@
 #include <limits>
 #include <optional>
 #include <string>
+#include <vector>
 
+#include "arrival_scheduler.h"
 #include "report_parser.h"
 #include "report_validator.h"
 
@@ -201,6 +203,76 @@ TEST_CASE("ReportValidator rejects a non-finite altitude") {
   REQUIRE_FALSE(result.IsValid());
   REQUIRE(result.error.has_value());
   CHECK(result.error->code == correlator::ValidationErrorCode::kNonFiniteValue);
+}
+
+TEST_CASE("ArrivalScheduler waits until a report deadline") {
+  correlator::ArrivalScheduler scheduler;
+
+  CHECK(scheduler.Submit(4U, 10.0).empty());
+  CHECK(scheduler.AdvanceTo(11.999).empty());
+
+  const std::vector<correlator::Decision> decisions = scheduler.AdvanceTo(12.0);
+
+  REQUIRE(decisions.size() == 1U);
+  CHECK(decisions.front().report_index == 4U);
+  CHECK(decisions.front().at_secs == 12.0);
+}
+
+TEST_CASE("ArrivalScheduler orders equal deadlines deterministically") {
+  correlator::ArrivalScheduler scheduler;
+
+  CHECK(scheduler.Submit(9U, 10.0).empty());
+  CHECK(scheduler.Submit(3U, 10.0).empty());
+
+  const std::vector<correlator::Decision> decisions = scheduler.AdvanceTo(12.0);
+
+  REQUIRE(decisions.size() == 2U);
+  CHECK(decisions[0].report_index == 3U);
+  CHECK(decisions[1].report_index == 9U);
+  CHECK(decisions[0].at_secs <= decisions[1].at_secs);
+}
+
+TEST_CASE("ArrivalScheduler finalizes due reports before a large gap") {
+  correlator::ArrivalScheduler scheduler;
+
+  const std::vector<correlator::Decision> decisions =
+      scheduler.Submit(8U, 20.0);
+
+  CHECK(decisions.empty());
+  const std::vector<correlator::Decision> later_decisions =
+      scheduler.Submit(2U, 30.0);
+
+  REQUIRE(later_decisions.size() == 1U);
+  CHECK(later_decisions.front().report_index == 8U);
+  CHECK(later_decisions.front().at_secs == 22.0);
+}
+
+TEST_CASE("ArrivalScheduler flushes pending reports within their window") {
+  correlator::ArrivalScheduler scheduler;
+
+  CHECK(scheduler.Submit(6U, 5.0).empty());
+  const std::vector<correlator::Decision> decisions = scheduler.Flush();
+
+  REQUIRE(decisions.size() == 1U);
+  CHECK(decisions.front().report_index == 6U);
+  CHECK(decisions.front().at_secs == 7.0);
+  CHECK(scheduler.Flush().empty());
+}
+
+TEST_CASE("ArrivalScheduler keeps decision times nondecreasing") {
+  correlator::ArrivalScheduler scheduler;
+
+  CHECK(scheduler.Submit(1U, 10.0).empty());
+  const std::vector<correlator::Decision> first_decisions =
+      scheduler.AdvanceTo(12.0);
+  REQUIRE(first_decisions.size() == 1U);
+
+  CHECK(scheduler.Submit(2U, 12.0).empty());
+  const std::vector<correlator::Decision> second_decisions = scheduler.Flush();
+
+  REQUIRE(second_decisions.size() == 1U);
+  CHECK(first_decisions.front().at_secs <= second_decisions.front().at_secs);
+  CHECK(second_decisions.front().at_secs == 14.0);
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,

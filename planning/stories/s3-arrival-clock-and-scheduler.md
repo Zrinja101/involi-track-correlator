@@ -2,7 +2,7 @@
 
 **Parent feature:** [F2 — Time, Buffering, and Scheduling](../features/f2-time-buffering-and-scheduling.md)  
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** Ready for design
+**Status:** Implemented
 
 ## Story
 
@@ -17,6 +17,7 @@ As the correlator, I need deterministic arrival-clock scheduling so every decisi
 
 ## Traceability
 
-- Source scope: scheduler/deadline modules.
-- Tests: scheduler unit tests and executable contract tests.
-- Verification: scorer contract validation.
+- Source scope: `src/arrival_scheduler.h`, `src/arrival_scheduler.cpp`, and the `correlator_core` CMake target.
+- Tests: `tests/correlator_tests.cpp`, covering exact deadlines, equal-deadline ordering, large gaps, EOF flush, and monotonic `at` values.
+- Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Deferred to S4/S9: bounded pending-state policy and executable JSONL output integration.
