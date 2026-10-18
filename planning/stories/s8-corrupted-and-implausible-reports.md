@@ -28,4 +28,4 @@ As the correlator, I need to reject corrupted or implausible observations rather
 - **Result:** Implemented contextual horizontal/vertical motion checks and non-increasing-time handling without mutating track state in the validator.
 - **Verification:** 38 test cases and 142 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
 - **Commit:** `4229347` — `feat(S8): reject implausible report motion`
-- **Follow-up fix:** Contradictory identity/position reports are now rejected without creating a new track; the associated calibration-fix commit is recorded after this implementation step.
+- **Follow-up fix:** `343857b` — `fix(S8): reject contradictory identity position`; contradictory identity/position reports are rejected without creating a new track.

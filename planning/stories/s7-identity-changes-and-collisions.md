@@ -28,3 +28,4 @@ As the correlator, I need identifier evidence to be useful without treating iden
 - **Result:** Implemented history-aware identifier matching so identifier changes preserve continuity, duplicate identifiers remain position-resolved, and missing/conflicting identifiers remain distinguishable.
 - **Verification:** 34 test cases and 134 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
 - **Commit:** `0787590` — `feat(S7): handle changing and duplicate identifiers`
+- **Follow-up:** `343857b` adds explicit rejection when an identifier matches an existing track but position only fits a conflicting track.
