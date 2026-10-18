@@ -70,6 +70,19 @@ The implementation must satisfy the README contract:
 - Avoid treating an identifier as globally unique without corroborating evidence.
 - Keep all physical quantities named with units where known.
 
+## Accepted architecture decisions
+
+The architecture decision record [ADR-001](decisions/adr-001-correlator-architecture.md) is accepted for implementation planning:
+
+- Use a modular, deterministic, bounded streaming architecture.
+- Use a hybrid staged association strategy: validate, gate candidates, combine deterministic evidence, score, and reject when ambiguity remains.
+- Treat identifiers as supporting evidence rather than globally unique keys.
+- Reject ambiguous, malformed, and incomplete reports with `track: null` while continuing processing when the input line index is known.
+- Send diagnostics to stderr so stdout remains machine-readable JSONL.
+- Do not update track state from rejected reports.
+
+These decisions were selected to balance track quality, explainability, deterministic replay, bounded resources, and testability. Probabilistic/ML association and identifier-only matching are explicitly deferred or rejected because they add complexity or fail known input conditions.
+
 ## Risks and mitigations
 
 | Risk | Mitigation |

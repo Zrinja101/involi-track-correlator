@@ -10,12 +10,12 @@ Maintain stable track identities and associate reports using evidence from ident
 ## Requirements
 
 - Create stable, unique track names for newly observed aircraft.
-- Associate reports with existing tracks using deterministic evidence and confidence rules.
+- Associate reports with existing tracks using the accepted hybrid staged strategy: candidate gating followed by deterministic evidence scoring.
 - Update track state after accepted reports.
 - Retire stale tracks without allowing state to grow without bound.
 - Support missing identifiers, changing identifiers, and duplicate identifiers.
 - Avoid merging nearby aircraft solely because their positions or identifiers are similar.
-- Reject or defer ambiguous reports when evidence is insufficient.
+- Reject ambiguous reports with `track: null` when evidence is insufficient at the decision deadline; do not mutate track state.
 
 ## Acceptance criteria
 

@@ -10,9 +10,11 @@ Prevent corrupted or physically implausible reports from contaminating real trac
 ## Requirements
 
 - Distinguish syntactic invalidity from association uncertainty.
+- Reject malformed JSON and missing required fields with a null-track answer when the input line index is known, then continue processing subsequent lines.
 - Detect corrupted positions and non-finite values.
 - Reject reports that cannot be assigned with sufficient confidence using `track: null`.
 - Ensure rejected reports do not update track state.
+- Diagnostics are written to stderr only; stdout remains valid JSONL answers.
 - Keep rejection decisions within the same timing and ordering contract as accepted reports.
 - Avoid rejecting valid reports merely because optional identifiers are absent.
 
