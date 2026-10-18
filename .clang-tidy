@@ -1,0 +1,34 @@
+---
+# Enable all Google coding standard checks, standard bugprone checks,
+# and the Clang Static Analyzer.
+Checks: >
+  -*,
+  google-*,
+  bugprone-*,
+  clang-analyzer-*,
+  -google-readability-todo,
+  -google-runtime-references
+
+# Turn warnings into errors to strictly enforce rules in CI/CD pipelines
+WarningsAsErrors: 'google-*,bugprone-*'
+
+# Configure specific check behaviors to align with Google conventions
+CheckOptions:
+  # Ensure header guards match the Google style: PROJECT_PATH_FILE_H_
+  - key:             google-readability-header-guard.HeaderGuardExtensions
+    value:           'h,hpp,hh'
+
+  # Google style uses specific naming formats for variables, functions, and classes
+  - key:             readability-identifier-naming.ClassCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.FunctionCase
+    value:           CamelCase
+  - key:             readability-identifier-naming.VariableCase
+    value:           snake_case
+  - key:             readability-identifier-naming.MemberCase
+    value:           snake_case_
+  - key:             readability-identifier-naming.ConstexprVariableCase
+    value:           kCamelCase
+  - key:             readability-identifier-naming.GlobalConstantCase
+    value:           kCamelCase
+...
