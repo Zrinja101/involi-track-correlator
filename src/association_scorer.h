@@ -15,7 +15,7 @@ namespace correlator {
 inline constexpr double kDefaultMaxAssociationAgeSecs = 60.0;
 inline constexpr double kDefaultMaxAssociationDistanceM = 500.0;
 inline constexpr double kDefaultMinAssociationScore = 0.5;
-inline constexpr double kDefaultMinAssociationMargin = 0.05;
+inline constexpr double kDefaultMinAssociationMargin = 0.0;
 
 struct AssociationConfig {
   double max_track_age_secs = kDefaultMaxAssociationAgeSecs;

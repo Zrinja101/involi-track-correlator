@@ -81,7 +81,8 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **F02 calibration:** 12-report, three-receiver clock-offset fixture passes with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **F03 calibration:** 24-report identifier-change and duplicate-identifier fixture passes with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **F04 calibration:** Five-report gap/retirement fixture passes with 100.00% association, 1 expected retirement switch, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
-- **F05 calibration:** After tightening the default distance gate to 500 m, the 24-report close-crossing/duplicate-ID fixture scores 91.67% with 0 merged tracks and 0 contract errors, but still fails the association target due to ambiguity rejections.
+- **F05 calibration:** After tightening the default distance gate to 500 m and retaining only exact-tie rejection, the 24-report close-crossing/duplicate-ID fixture passes with 100.00% association, 0 merged tracks, 0 switches, and 0 contract errors.
+- **Sample regression after F05 fix:** 84.58% association, 122 ID switches, 4 merged tracks, 0 invalid accepted reports, and 0 contract errors; still below the epic target.
 - **Not yet verified:** F06–F08 calibration fixtures, 100% line/branch coverage, Doxygen, long-stream memory/performance, Docker build, and final release readiness.
 
 ## Coverage policy

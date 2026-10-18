@@ -79,7 +79,7 @@ Initial numerical limits are implementation parameters to be selected by fixture
 
 ### F05 gate calibration note
 
-The default association distance gate was tightened from 10,000 m to 500 m after F05 exposed a same-identifier merge. This removed the merged track, but the crossing fixture still produces ambiguity rejections; the gate is an interim calibration result, not a final parameter freeze.
+The default association distance gate was tightened from 10,000 m to 500 m after F05 exposed a same-identifier merge. The default ambiguity margin was then set to zero while retaining exact-tie rejection. Together these changes allow strictly better candidates through close crossings without merging or accepting exact ties. These remain calibration parameters, not a final freeze.
 
 ## Rationale
 

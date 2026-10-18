@@ -61,7 +61,7 @@ AssociationResult AssociationScorer::Evaluate(
     return result;
   }
   if (result.candidates.size() > 1U &&
-      result.candidates[0].score - result.candidates[1].score <
+      result.candidates[0].score - result.candidates[1].score <=
           config_.min_score_margin) {
     return result;
   }
