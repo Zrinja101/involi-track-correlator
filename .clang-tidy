@@ -9,6 +9,9 @@ Checks: >
   -google-readability-todo,
   -google-runtime-references
 
+# Report diagnostics from project headers while excluding fetched dependencies.
+HeaderFilterRegex: '^/workspaces/involi-track-correlator/(src|tests)/.*'
+
 # Turn warnings into errors to strictly enforce rules in CI/CD pipelines
 WarningsAsErrors: 'google-*,bugprone-*'
 
