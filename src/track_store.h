@@ -7,6 +7,7 @@
 #include <string>
 #include <string_view>
 #include <unordered_map>
+#include <vector>
 
 #include "report.h"
 
@@ -39,6 +40,9 @@ class TrackStore {
 
   // Returns the active track, or null when no track has that name.
   [[nodiscard]] const TrackState* FindTrack(std::string_view track_id) const;
+
+  // Returns a bounded snapshot for association evaluation.
+  [[nodiscard]] std::vector<TrackState> Snapshot() const;
 
   // Removes tracks inactive for at least the configured retirement interval.
   [[nodiscard]] std::size_t RetireStaleTracks(double current_time_secs);

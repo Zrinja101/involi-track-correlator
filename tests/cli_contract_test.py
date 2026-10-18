@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/ usr / bin / env python3
 """Exercise the correlator's stdin/stdout JSONL contract."""
 
 import json
@@ -22,7 +22,7 @@ def main() -> int:
     answers = [json.loads(line) for line in result.stdout.splitlines()]
     assert len(answers) == 2, answers
     assert [answer["report"] for answer in answers] == [0, 1], answers
-    assert all(answer["track"] is None for answer in answers), answers
+    assert [answer["track"] for answer in answers] == ["T0", "T0"], answers
     assert all(
         report["arr"] <= answer["at"] <= report["arr"] + 2.0
         for report, answer in zip(reports, answers)
