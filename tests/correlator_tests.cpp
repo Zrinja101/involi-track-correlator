@@ -8,6 +8,7 @@
 #include "arrival_scheduler.h"
 #include "report_parser.h"
 #include "report_validator.h"
+#include "track_store.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,
 // readability-identifier-length, bugprone-easily-swappable-parameters)
@@ -294,6 +295,71 @@ TEST_CASE("ArrivalScheduler enforces a pending-report capacity") {
   CHECK(remaining_decisions[0].report_index == 2U);
   CHECK(remaining_decisions[1].report_index == 3U);
   CHECK(early_decisions.front().at_secs <= remaining_decisions.front().at_secs);
+}
+
+TEST_CASE("TrackStore creates and updates stable tracks") {
+  correlator::TrackStore store(2U, 3U, 60.0);
+  correlator::Report first_report = MakeValidReport();
+
+  const std::optional<std::string> track_id = store.CreateTrack(first_report);
+
+  REQUIRE(track_id.has_value());
+  CHECK(track_id.value() == "T0");
+  REQUIRE(store.UpdateTrack(track_id.value(), first_report));
+  const correlator::TrackState* track = store.FindTrack(track_id.value());
+  REQUIRE(track != nullptr);
+  CHECK(track->latest_report.report_index == first_report.report_index);
+  CHECK(track->history.size() == 2U);
+}
+
+TEST_CASE("TrackStore bounds observation history") {
+  correlator::TrackStore store(2U, 2U, 60.0);
+  correlator::Report first_report = MakeValidReport();
+  REQUIRE(store.CreateTrack(first_report).has_value());
+  const std::string track_id = "T0";
+
+  first_report.report_index = 1U;
+  REQUIRE(store.UpdateTrack(track_id, first_report));
+  first_report.report_index = 2U;
+  REQUIRE(store.UpdateTrack(track_id, first_report));
+
+  const correlator::TrackState* track = store.FindTrack(track_id);
+  REQUIRE(track != nullptr);
+  REQUIRE(track->history.size() == 2U);
+  CHECK(track->history.front().report_index == 1U);
+  CHECK(track->history.back().report_index == 2U);
+}
+
+TEST_CASE("TrackStore retires tracks at the inactivity boundary") {
+  correlator::TrackStore store(2U, 2U, 5.0);
+  const correlator::Report report = MakeValidReport();
+  REQUIRE(store.CreateTrack(report).has_value());
+
+  CHECK(store.RetireStaleTracks(14.999) == 0U);
+  CHECK(store.ActiveTrackCount() == 1U);
+  CHECK(store.RetireStaleTracks(15.0) == 1U);
+  CHECK(store.ActiveTrackCount() == 0U);
+}
+
+TEST_CASE("TrackStore never reuses retired track names") {
+  correlator::TrackStore store(2U, 2U, 5.0);
+  const correlator::Report report = MakeValidReport();
+  REQUIRE(store.CreateTrack(report).value() == "T0");
+  REQUIRE(store.RetireStaleTracks(15.0) == 1U);
+
+  const std::optional<std::string> replacement = store.CreateTrack(report);
+
+  REQUIRE(replacement.has_value());
+  CHECK(replacement.value() == "T1");
+}
+
+TEST_CASE("TrackStore refuses new tracks at its active-track limit") {
+  correlator::TrackStore store(1U, 2U, 5.0);
+  const correlator::Report report = MakeValidReport();
+  REQUIRE(store.CreateTrack(report).has_value());
+
+  CHECK_FALSE(store.CreateTrack(report).has_value());
+  CHECK(store.ActiveTrackCount() == 1U);
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,

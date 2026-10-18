@@ -2,7 +2,7 @@
 
 **Parent feature:** [F3 — Track Association and Lifecycle](../features/f3-track-association-and-lifecycle.md)  
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** Ready for design
+**Status:** Implemented
 
 ## Story
 
@@ -20,5 +20,7 @@ History retention, active-track limits, and retirement behavior must follow the 
 
 ## Traceability
 
-- Source scope: track state/store modules.
-- Tests: lifecycle, naming, stale-gap, and memory tests.
+- Source scope: `src/track_store.h`, `src/track_store.cpp`, and the `correlator_core` CMake target.
+- Tests: `tests/correlator_tests.cpp`, covering creation, updates, history eviction, retirement, name monotonicity, and active-track capacity.
+- Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Defaults: 4,096 active tracks, 32 observations per history, and 60 seconds to retirement; all limits are constructor-configurable.
