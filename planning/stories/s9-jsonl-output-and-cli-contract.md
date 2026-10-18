@@ -2,7 +2,7 @@
 
 **Parent feature:** [F5 — Output and Streaming Contract](../features/f5-output-and-streaming-contract.md)  
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** Ready for design
+**Status:** Implemented
 
 ## Story
 
@@ -14,3 +14,10 @@ As a pipeline user, I need the executable to consume stdin JSONL and produce onl
 - Rejected reports use JSON `null`.
 - Empty input, one report, EOF, and malformed-input behavior are defined and tested.
 - Diagnostics never corrupt stdout answers.
+
+## Traceability
+
+- Source scope: `src/answer_writer.h`, `src/answer_writer.cpp`, `src/main.cpp`, and the integrated core pipeline.
+- Tests: `tests/correlator_tests.cpp` for serialization and `tests/cli_contract_test.py` for executable stdin/stdout behavior.
+- Verification: Debug configure/build, CTest, clang-format, clang-tidy, and executable JSONL contract checks completed successfully.
+- Association remains intentionally unimplemented at this boundary; valid reports currently produce `track: null` until the association integration stories are complete.

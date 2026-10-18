@@ -1,11 +1,14 @@
 #include <catch2/catch_test_macros.hpp>
 #include <cstddef>
 #include <limits>
+#include <nlohmann/json.hpp>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include "answer_writer.h"
 #include "arrival_scheduler.h"
 #include "association_scorer.h"
 #include "identifier_matcher.h"
@@ -578,6 +581,31 @@ TEST_CASE(
   track.history.front().identifier = "KNOWN";
   CHECK(correlator::IdentifierMatcher::Compare(report, track) ==
         correlator::IdentifierRelation::kConflict);
+}
+
+TEST_CASE("AnswerWriter serializes assigned and rejected answers") {
+  std::ostringstream output;
+  correlator::AnswerWriter::Write(
+      output,
+      correlator::Answer{
+          .report_index = 3U, .track_id = std::string("T7"), .at_secs = 12.5});
+  correlator::AnswerWriter::Write(
+      output,
+      correlator::Answer{
+          .report_index = 4U, .track_id = std::nullopt, .at_secs = 13.0});
+
+  const std::string serialized = output.str();
+  const std::size_t separator = serialized.find('\n');
+  const nlohmann::json assigned =
+      nlohmann::json::parse(serialized.substr(0, separator));
+  const nlohmann::json rejected =
+      nlohmann::json::parse(serialized.substr(separator + 1));
+  CHECK(assigned.at("report") == 3U);
+  CHECK(assigned.at("track") == "T7");
+  CHECK(assigned.at("at") == 12.5);
+  CHECK(rejected.at("report") == 4U);
+  CHECK(rejected.at("track").is_null());
+  CHECK(rejected.at("at") == 13.0);
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,
