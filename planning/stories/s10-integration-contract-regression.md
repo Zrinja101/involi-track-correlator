@@ -21,3 +21,9 @@ As a maintainer, I need executable-level regression tests that verify the comple
 - Tests: `tests/cli_contract_test.py` and the full Catch2 unit suite.
 - Verification: Debug configure/build, CTest, executable contract test, and sample scorer baseline completed.
 - The S9 baseline scored 0% association with zero assigned tracks; this story establishes the first end-to-end assignment path.
+
+## Completion record
+
+- **Result:** Integrated scheduling, pending reports, track lifecycle, plausibility validation, association scoring, and output writing into the executable.
+- **Verification:** 39 test cases and 148 assertions passed; CLI contract test passed; CTest, clang-format, and clang-tidy passed. Sample scorer produced 63.21% association, 2 ID switches, 4 merged tracks, 1 invalid accepted report, and 0 contract errors. Overall scorer result remains `FAIL` because association is below 99% and merged tracks remain.
+- **Commit:** `0b6e3e5` — `feat(S10): integrate end-to-end association pipeline`

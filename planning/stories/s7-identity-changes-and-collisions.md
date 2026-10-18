@@ -22,3 +22,9 @@ As the correlator, I need identifier evidence to be useful without treating iden
 - Tests: `tests/correlator_tests.cpp`, covering historical identifier matches, identifier changes, duplicate identifiers, missing identifiers, and conflicts.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
 - Identifier history is bounded by the S5 track-history limit; final weights remain subject to ADR-003 calibration.
+
+## Completion record
+
+- **Result:** Implemented history-aware identifier matching so identifier changes preserve continuity, duplicate identifiers remain position-resolved, and missing/conflicting identifiers remain distinguishable.
+- **Verification:** 34 test cases and 134 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
+- **Commit:** `0787590` — `feat(S7): handle changing and duplicate identifiers`

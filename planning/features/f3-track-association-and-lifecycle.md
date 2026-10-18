@@ -1,6 +1,7 @@
 # F3 — Track Association and Lifecycle
 
 **Parent epic:** [Production Track Correlator](../epic.md)  
+**Status:** Implemented; calibration pending
 **Stories:** [S5](../stories/s5-track-state-and-lifecycle.md), [S6](../stories/s6-association-scoring.md), [S7](../stories/s7-identity-changes-and-collisions.md)
 
 ## Goal
@@ -25,3 +26,9 @@ Maintain stable track identities and associate reports using the hybrid staged m
 - Close crossings and temporary gaps have deterministic expected outcomes.
 - Track retirement and recreation do not reuse active names or corrupt historical output.
 - Association decisions expose testable evidence/confidence rather than relying on untestable global state.
+
+## Completion record
+
+- **Completed stories:** S5, S6, S7.
+- **Result:** Track state, deterministic scoring, identity history, identifier changes, and duplicate-ID handling are implemented.
+- **Verification:** Completion records reference `8bd8183`, `c014e60`, and `0787590`. Sample-level calibration is not complete; S10 currently scores 63.21% association with 4 merged tracks.

@@ -21,3 +21,9 @@ As the correlator, I need deterministic arrival-clock scheduling so every decisi
 - Tests: `tests/correlator_tests.cpp`, covering exact deadlines, equal-deadline ordering, large gaps, EOF flush, and monotonic `at` values.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
 - Deferred to S4/S9: bounded pending-state policy and executable JSONL output integration.
+
+## Completion record
+
+- **Result:** Implemented arrival-clock deadlines, exact-boundary finalization, deterministic equal-deadline ordering, EOF flushing, and nondecreasing `at` values.
+- **Verification:** 19 test cases and 80 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
+- **Commit:** `e231cef` — `feat(S3): add arrival clock scheduler`

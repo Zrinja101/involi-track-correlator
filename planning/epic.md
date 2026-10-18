@@ -1,6 +1,6 @@
 # Epic: Production Track Correlator
 
-**Status:** Planned  
+**Status:** In progress
 **Repository:** `involi-track-correlator`  
 **Parent:** None  
 **Children:** [Features](#features)
@@ -11,7 +11,7 @@ Replace the placeholder correlator with a production-quality C++20 streaming ser
 
 The correlator must make each decision within two seconds of report arrival, emit exactly one answer per report, preserve nondecreasing decision times, and use bounded memory for arbitrarily long input streams.
 
-## Current baseline
+## Initial baseline
 
 - `src/main.cpp` currently assigns every report a unique track.
 - `tests/correlator_tests.cpp` contains one placeholder Catch2 test.
@@ -20,6 +20,31 @@ The correlator must make each decision within two seconds of report arrival, emi
 - Baseline CTest: 1/1 placeholder test passes.
 - Baseline sample score: 7,857 reports, 100% association, 553 ID switches, 0 merged tracks, 0 invalid accepted, 0 contract errors; overall `FAIL` because each report receives its own track.
 - Docker verification is pending because Docker is not available inside the current development container.
+
+## Implementation progress
+
+### Completed stories
+
+| Stories | Result | Commit references |
+|---|---|---|
+| S1–S2 | Typed report model and basic validation | `2f41321`, `fe8c2ca` |
+| S3–S4 | Arrival-clock scheduling and bounded pending state | `e231cef`, `007137e` |
+| S5–S7 | Track lifecycle, deterministic scoring, and identifier continuity | `8bd8183`, `c014e60`, `0787590` |
+| S8 | Contextual motion plausibility validation | `4229347` |
+| S9–S10 | JSONL contract and end-to-end association pipeline | `eefc2e0`, `0b6e3e5` |
+
+### Current results
+
+- Unit suite: 39 test cases and 148 assertions passed at the S10 milestone.
+- CLI contract: passed.
+- Scorer contract errors: 0.
+- Sample metrics: 63.21% association, 2 ID switches, 4 merged tracks, and 1 invalid accepted report out of 15.
+- Overall sample scorer: `FAIL`; the 99% association and merged-track requirements are not yet met.
+- Remaining epic work: synthetic calibration fixtures, threshold/resource calibration, coverage measurement, Doxygen, performance/memory evidence, Docker verification, and final review.
+
+### Completion-record policy
+
+Every completed story and feature must contain a completion record with its result, verification evidence, and associated commit reference. This epic is updated at each milestone and remains `In progress` until the definition-of-done checklist is satisfied.
 
 ## Problem statement
 

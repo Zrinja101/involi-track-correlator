@@ -21,3 +21,9 @@ As a pipeline user, I need the executable to consume stdin JSONL and produce onl
 - Tests: `tests/correlator_tests.cpp` for serialization and `tests/cli_contract_test.py` for executable stdin/stdout behavior.
 - Verification: Debug configure/build, CTest, clang-format, clang-tidy, and executable JSONL contract checks completed successfully.
 - Association remains intentionally unimplemented at this boundary; valid reports currently produce `track: null` until the association integration stories are complete.
+
+## Completion record
+
+- **Result:** Implemented JSONL serialization, exact-once output, monotonic decision times, EOF flushing, stderr diagnostics, and executable contract coverage.
+- **Verification:** 39 test cases and 148 assertions passed at completion; CLI contract test passed; Debug build, CTest, clang-format, and clang-tidy passed.
+- **Commit:** `eefc2e0` — `feat(S9): integrate JSONL output contract`

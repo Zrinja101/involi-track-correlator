@@ -71,6 +71,14 @@ python3 tools/score.py data/sample output.jsonl
 
 Calibration runs must use the fixture families and holdout procedure defined in [ADR-003](decisions/adr-003-calibration-and-fixture-strategy.md). Each run must record the parameter set, fixture revision, scorer metrics, contract errors, runtime, and peak state.
 
+## Completed milestone evidence
+
+- **S1–S9:** Unit and static-analysis results are recorded in each story completion record.
+- **S10 commit:** `0b6e3e5` integrated the end-to-end pipeline.
+- **S10 unit/CLI verification:** 39 test cases, 148 assertions, and the executable CLI contract test passed.
+- **S10 sample scorer:** 63.21% association, 2 ID switches, 4 merged tracks, 1 invalid accepted report out of 15, and 0 contract errors; overall `FAIL` against the 99% association and merged-track targets.
+- **Not yet verified:** 100% line/branch coverage, Doxygen, long-stream memory/performance, Docker build, and final release readiness.
+
 ## Coverage policy
 
 Measure coverage for production code only. Generated dependency code, external Catch2 code, and intentionally excluded integration shims must not be counted, and every exclusion must be documented. The target is 100% line and branch coverage. Coverage is evidence of exercised paths, not a substitute for meaningful behavioral assertions.

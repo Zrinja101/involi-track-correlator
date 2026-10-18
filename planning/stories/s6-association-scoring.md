@@ -24,3 +24,9 @@ The implementation must follow [ADR-002](../decisions/adr-002-association-model-
 - Tests: `tests/correlator_tests.cpp`, covering distance ranking, identifier evidence, missing identifiers, stale/distant gates, and ambiguity rejection.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
 - Initial scoring weights and gates are explicit constructor configuration and remain subject to ADR-003 calibration.
+
+## Completion record
+
+- **Result:** Implemented deterministic local-coordinate distance scoring, constant-velocity prediction from history, age/distance gates, identifier evidence, minimum-score checks, and ambiguity margins.
+- **Verification:** 30 test cases and 127 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
+- **Commit:** `c014e60` — `feat(S6): add deterministic association scoring`

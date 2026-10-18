@@ -24,3 +24,9 @@ History retention, active-track limits, and retirement behavior must follow the 
 - Tests: `tests/correlator_tests.cpp`, covering creation, updates, history eviction, retirement, name monotonicity, and active-track capacity.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
 - Defaults: 4,096 active tracks, 32 observations per history, and 60 seconds to retirement; all limits are constructor-configurable.
+
+## Completion record
+
+- **Result:** Implemented stable monotonic track names, bounded history, active-track capacity, stale retirement, safe recreation, and snapshots for association evaluation.
+- **Verification:** 25 test cases and 114 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
+- **Commit:** `8bd8183` — `feat(S5): add bounded track lifecycle`

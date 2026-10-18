@@ -1,6 +1,7 @@
 # F1 — Input and Report Model
 
 **Parent epic:** [Production Track Correlator](../epic.md)  
+**Status:** Complete
 **Stories:** [S1](../stories/s1-report-model-and-parser.md), [S2](../stories/s2-validation-boundary.md)
 
 ## Goal
@@ -28,3 +29,9 @@ Convert JSONL input into a typed, validated internal report representation witho
 ## Design notes
 
 The parser should not decide which aircraft a report belongs to. It should establish syntactic and basic physical validity, leaving association confidence and track rejection to F4.
+
+## Completion record
+
+- **Completed stories:** S1, S2.
+- **Result:** Typed parsing and basic report validation are implemented and independently tested.
+- **Verification:** S1 and S2 completion records contain detailed test evidence and commit references: `2f41321`, `fe8c2ca`.

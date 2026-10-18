@@ -22,3 +22,9 @@ As the correlator, I need to reject corrupted or implausible observations rather
 - Tests: `tests/correlator_tests.cpp`, covering realistic movement, horizontal jumps, vertical jumps, and duplicate-time observations.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
 - Initial speed limits are explicit configuration and remain subject to ADR-003 calibration. Integration with track mutation and null-track output is deferred to S9/S10.
+
+## Completion record
+
+- **Result:** Implemented contextual horizontal/vertical motion checks and non-increasing-time handling without mutating track state in the validator.
+- **Verification:** 38 test cases and 142 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
+- **Commit:** `4229347` — `feat(S8): reject implausible report motion`

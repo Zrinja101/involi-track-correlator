@@ -23,3 +23,9 @@ Pending deadlines and conflict-component bounds must follow [ADR-002](../decisio
 - Tests: `tests/correlator_tests.cpp`, including capacity-triggered finalization and delayed burst behavior.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
 - The default pending capacity is 4096 reports; tests use a small explicit capacity to exercise the bound.
+
+## Completion record
+
+- **Result:** Added configurable pending capacity and deterministic oldest-report early finalization at the current arrival clock when capacity is reached.
+- **Verification:** 20 test cases and 89 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
+- **Commit:** `007137e` — `feat(S4): bound pending report buffering`

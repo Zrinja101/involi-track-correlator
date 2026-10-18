@@ -1,6 +1,7 @@
 # F4 — Validation and Rejection
 
 **Parent epic:** [Production Track Correlator](../epic.md)  
+**Status:** Implemented; integration hardening pending
 **Stories:** [S2](../stories/s2-validation-boundary.md), [S8](../stories/s8-corrupted-and-implausible-reports.md)
 
 ## Goal
@@ -24,3 +25,9 @@ Prevent corrupted or physically implausible reports from contaminating real trac
 - A rejected report cannot alter subsequent association decisions.
 - Boundary geographic values are accepted when valid and rejected when outside the valid domain.
 - Invalid, ambiguous, and stale cases have separate tests and documented rationale.
+
+## Completion record
+
+- **Completed stories:** S2, S8.
+- **Result:** Basic report-domain validation and contextual motion plausibility checks are implemented. Track mutation protection is enforced in the S10 pipeline.
+- **Verification:** Completion records reference `fe8c2ca` and `4229347`; S10 integration evidence is recorded in the S10 story.

@@ -27,3 +27,9 @@ As the correlator, I need each JSONL line converted into a typed report so downs
 - Tests: `tests/correlator_tests.cpp`, covering seven parser scenarios and 39 assertions.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
 - Deferred to S2: geographic range policy and application-level rejection/output behavior.
+
+## Completion record
+
+- **Result:** Implemented typed JSONL parsing with structured errors, optional-field preservation, finite-number checks, and report-index preservation.
+- **Verification:** 8 test cases and 37 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
+- **Commit:** `2f41321` — `feat(S1): add typed report parser`

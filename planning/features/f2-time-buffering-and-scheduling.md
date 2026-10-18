@@ -1,6 +1,7 @@
 # F2 — Time, Buffering, and Scheduling
 
 **Parent epic:** [Production Track Correlator](../epic.md)  
+**Status:** Complete
 **Stories:** [S3](../stories/s3-arrival-clock-and-scheduler.md), [S4](../stories/s4-delayed-report-buffering.md)
 
 ## Goal
@@ -24,3 +25,9 @@ Make decisions using the input arrival clock while allowing enough bounded delay
 - Delayed bursts do not cause unbounded queues.
 - End-of-input processing answers all remaining reports exactly once.
 - Scheduler tests use a controllable arrival clock and do not depend on sleeping.
+
+## Completion record
+
+- **Completed stories:** S3, S4.
+- **Result:** Arrival-clock deadlines, deterministic EOF behavior, and bounded pending capacity are implemented.
+- **Verification:** Completion records reference `e231cef` and `007137e` with test and static-analysis results.

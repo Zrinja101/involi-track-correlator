@@ -21,3 +21,9 @@ As the correlator, I need a clear distinction between malformed input, physicall
 - Tests: `tests/correlator_tests.cpp`, covering receiver, finite-value, and geographic-boundary validation.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
 - Deferred to S3/S9: scheduler state, exact-once application output, and stdout/stderr integration behavior.
+
+## Completion record
+
+- **Result:** Implemented finite-value, receiver-name, latitude, and longitude validation with deterministic structured errors.
+- **Verification:** 14 test cases and 54 assertions passed at completion; Debug build, CTest, clang-format, and clang-tidy passed.
+- **Commit:** `fe8c2ca` — `feat(S2): add report validation boundary`
