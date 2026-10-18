@@ -85,8 +85,16 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **Interpretation:** The current pipeline handles the uncomplicated single-aircraft baseline. This result does not calibrate or validate close-aircraft, identifier-collision, corruption, delay, or resource behavior.
 
+## Calibration milestone: F02
+
+- **Fixture:** `data/synthetic/f02-clock-offsets/`.
+- **Generator:** `tools/generate_calibration_fixtures.py --family f02`.
+- **Scenario:** 12 observations for one aircraft across three receivers with offsets of -1.5, +2.0, and +0.25 seconds and smooth movement.
+- **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
+- **Interpretation:** The current pipeline remains stable when receiver timestamps differ from arrival time in this controlled case. No receiver-clock estimator has been calibrated yet; the result demonstrates tolerance, not clock-offset estimation quality.
+
 ## Open items
 
-- Add fixture families F02–F08 and holdout coverage.
+- Add fixture families F03–F08 and holdout coverage.
 - Select final parameter values after the complete fixture set exists.
 - Define peak-state and runtime measurements for F08.
