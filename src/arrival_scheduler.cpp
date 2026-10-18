@@ -1,13 +1,40 @@
 #include "arrival_scheduler.h"
 
 #include <algorithm>
+#include <stdexcept>
 #include <utility>
 
 namespace correlator {
 
+ArrivalScheduler::ArrivalScheduler(std::size_t max_pending_reports)
+    : max_pending_reports_(max_pending_reports) {
+  if (max_pending_reports == 0U) {
+    throw std::invalid_argument("Pending-report capacity must be positive");
+  }
+}
+
 std::vector<Decision> ArrivalScheduler::Submit(std::size_t report_index,
                                                double arrival_time_secs) {
   std::vector<Decision> decisions = AdvanceTo(arrival_time_secs);
+  if (pending_.size() >= max_pending_reports_) {
+    const auto oldest = std::min_element(
+        pending_.begin(), pending_.end(),
+        [](const PendingDecision& first, const PendingDecision& second) {
+          if (first.deadline_secs != second.deadline_secs) {
+            return first.deadline_secs < second.deadline_secs;
+          }
+          return first.report_index < second.report_index;
+        });
+    const PendingDecision pending = *oldest;
+    pending_.erase(oldest);
+    const double at_secs = has_last_at_
+                               ? std::max(last_at_secs_, current_time_secs_)
+                               : current_time_secs_;
+    decisions.push_back(
+        Decision{.report_index = pending.report_index, .at_secs = at_secs});
+    last_at_secs_ = at_secs;
+    has_last_at_ = true;
+  }
   pending_.push_back(PendingDecision{
       .report_index = report_index,
       .deadline_secs = arrival_time_secs + kDecisionWindowSecs,

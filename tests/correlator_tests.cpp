@@ -275,5 +275,26 @@ TEST_CASE("ArrivalScheduler keeps decision times nondecreasing") {
   CHECK(second_decisions.front().at_secs == 14.0);
 }
 
+TEST_CASE("ArrivalScheduler enforces a pending-report capacity") {
+  correlator::ArrivalScheduler scheduler(2U);
+
+  CHECK(scheduler.Submit(1U, 10.0).empty());
+  CHECK(scheduler.Submit(2U, 11.0).empty());
+
+  const std::vector<correlator::Decision> early_decisions =
+      scheduler.Submit(3U, 11.0);
+
+  REQUIRE(early_decisions.size() == 1U);
+  CHECK(early_decisions.front().report_index == 1U);
+  CHECK(early_decisions.front().at_secs == 11.0);
+
+  const std::vector<correlator::Decision> remaining_decisions =
+      scheduler.Flush();
+  REQUIRE(remaining_decisions.size() == 2U);
+  CHECK(remaining_decisions[0].report_index == 2U);
+  CHECK(remaining_decisions[1].report_index == 3U);
+  CHECK(early_decisions.front().at_secs <= remaining_decisions.front().at_secs);
+}
+
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,
 // readability-identifier-length, bugprone-easily-swappable-parameters)

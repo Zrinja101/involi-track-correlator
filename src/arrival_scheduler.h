@@ -7,6 +7,7 @@
 namespace correlator {
 
 inline constexpr double kDecisionWindowSecs = 2.0;
+inline constexpr std::size_t kDefaultMaxPendingReports = 4096U;
 
 struct Decision {
   std::size_t report_index;
@@ -16,6 +17,9 @@ struct Decision {
 // Schedules report decisions against the input arrival-time clock.
 class ArrivalScheduler {
  public:
+  explicit ArrivalScheduler(
+      std::size_t max_pending_reports = kDefaultMaxPendingReports);
+
   // Adds a report and returns any reports that became due at its arrival time.
   [[nodiscard]] std::vector<Decision> Submit(std::size_t report_index,
                                              double arrival_time_secs);
@@ -39,6 +43,7 @@ class ArrivalScheduler {
   double last_at_secs_ = 0.0;
   bool has_current_time_ = false;
   bool has_last_at_ = false;
+  std::size_t max_pending_reports_;
 };
 
 }  // namespace correlator
