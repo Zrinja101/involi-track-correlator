@@ -32,4 +32,6 @@ Make correctness measurable and the finished project maintainable, reviewable, a
 - **Current calibration result:** F01–F08 and the holdout fixture pass their current functional checks; F04 has one expected retirement switch. F08 runtime is approximately 11.3 seconds for 10,000 reports, while the sample regression remains below target at 84.81% association, 121 switches, and 3 merged tracks. Peak RSS is not yet measured.
 - **Coverage baseline:** 89.6% line, 100% function, and 53.9% branch coverage; the 100% line/branch target remains open.
 - **Documentation status:** Doxyfile and optional target are configured, but generation is blocked because Doxygen is not installed.
-- **Remaining work:** increase line/branch coverage, install/run Doxygen, collect peak-memory evidence, and verify Docker.
+- **Build status:** Local Debug and Release configure/build/test paths pass with `-j10`.
+- **Container status:** Docker verification is blocked because the current development container lacks the Docker CLI/socket despite Rancher Desktop being available in the host WSL environment.
+- **Remaining work:** increase line/branch coverage, install/run Doxygen, collect peak-memory evidence, and verify Docker from a connected environment.

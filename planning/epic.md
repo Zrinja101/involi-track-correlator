@@ -51,6 +51,8 @@ The correlator must make each decision within two seconds of report arrival, emi
 - Holdout calibration: `PASS`; 20 reports for two identifier-free aircraft produce 100.00% association, 0 switches, 0 merges, 0 invalid accepts, and 0 contract errors without retuning.
 - Coverage baseline: 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target remains open.
 - Doxygen setup: configured in `Doxyfile`, but generation is blocked because Doxygen is not installed in the current environment.
+- Local Release verification: configure, build, and CTest pass with `-j10`.
+- Docker verification: blocked because the current development container has no Docker CLI or Rancher socket mount; host WSL Rancher access is confirmed separately.
 - Remaining epic work: coverage improvement, Doxygen, peak-memory evidence, Docker verification, and final review.
 
 ### Completion-record policy

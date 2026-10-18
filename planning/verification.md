@@ -90,6 +90,8 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **Holdout calibration:** 20-report, two-aircraft identifier-free fixture passes with 100.00% association and zero contract errors without retuning.
 - **Coverage baseline:** Dedicated coverage build reports 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target is not met.
 - **Doxygen:** Configuration exists, but generation is blocked because the `doxygen` executable is unavailable.
+- **Local Release:** Configure, build, and CTest pass with bounded parallelism.
+- **Docker:** Blocked because `docker` is unavailable in the current development container; Rancher Desktop host WSL verification requires a workspace copy or socket exposure.
 - **Not yet verified:** peak RSS evidence, 100% line/branch coverage, generated Doxygen output, Docker build, and final release readiness.
 
 ## Coverage policy
