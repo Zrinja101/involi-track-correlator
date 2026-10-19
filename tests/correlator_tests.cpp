@@ -654,6 +654,35 @@ TEST_CASE("ReportParser rejects each required field omission") {
   }
 }
 
+TEST_CASE("ReportParser rejects each required field incorrect type") {
+  const std::vector<std::string> lines = {
+      R"({"arr":"10","rx":"R1","t":9.5,"lat":47.0,"lon":7.0})",
+      R"({"arr":10.0,"rx":"R1","t":"9.5","lat":47.0,"lon":7.0})",
+      R"({"arr":10.0,"rx":"R1","t":9.5,"lat":"47","lon":7.0})",
+      R"({"arr":10.0,"rx":"R1","t":9.5,"lat":47.0,"lon":"7"})",
+      R"({"arr":10.0,"rx":1,"t":9.5,"lat":47.0,"lon":7.0})",
+  };
+
+  for (const std::string& line : lines) {
+    const correlator::ParseResult result =
+        correlator::ReportParser::Parse(line, 0U);
+    REQUIRE_FALSE(result.IsSuccess());
+    REQUIRE(result.error.has_value());
+    CHECK(result.error->code == correlator::ParseErrorCode::kInvalidType);
+  }
+}
+
+TEST_CASE("ReportParser accepts explicit null optional fields") {
+  const correlator::ParseResult result = correlator::ReportParser::Parse(
+      R"({"arr":10.0,"rx":"R1","t":9.5,"lat":47.0,"lon":7.0,"id":null,"alt":null})",
+      0U);
+
+  REQUIRE(result.IsSuccess());
+  REQUIRE(result.report.has_value());
+  CHECK_FALSE(result.report->identifier.has_value());
+  CHECK_FALSE(result.report->altitude_m.has_value());
+}
+
 TEST_CASE("ReportParser rejects optional identifier with an incorrect type") {
   const correlator::ParseResult result = correlator::ReportParser::Parse(
       R"({"arr":10.0,"rx":"R1","t":9.5,"lat":47.0,"lon":7.0,"id":7})", 0U);
@@ -713,11 +742,21 @@ TEST_CASE(
     "tracks") {
   REQUIRE_THROWS_AS(correlator::ArrivalScheduler(0U), std::invalid_argument);
   REQUIRE_THROWS_AS(correlator::TrackStore(0U), std::invalid_argument);
+  REQUIRE_THROWS_AS(correlator::TrackStore(2U, 0U), std::invalid_argument);
+  REQUIRE_THROWS_AS(correlator::TrackStore(2U, 2U, 0.0), std::invalid_argument);
+  REQUIRE_THROWS_AS(
+      correlator::TrackStore(2U, 2U, std::numeric_limits<double>::quiet_NaN()),
+      std::invalid_argument);
 
   correlator::TrackStore store;
   const correlator::Report report = MakeValidReport();
   CHECK_FALSE(store.UpdateTrack("missing", report));
   CHECK(store.FindTrack("missing") == nullptr);
+
+  correlator::ArrivalScheduler scheduler;
+  CHECK(scheduler.Submit(0U, 10.0).empty());
+  CHECK(scheduler.AdvanceTo(9.0).empty());
+  CHECK(scheduler.Flush().size() == 1U);
 }
 
 TEST_CASE("AssociationScorer rejects candidates below its minimum score") {
