@@ -91,8 +91,8 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **Coverage baseline:** Dedicated coverage build reports 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target is not met.
 - **Doxygen:** Doxygen 1.9.6 generated `build/docs/html/index.html` successfully after the public API documentation commit `e83c62f`.
 - **Local Release:** Configure, build, and CTest pass with bounded parallelism.
-- **Docker:** Blocked because `docker` is unavailable in the current development container; Rancher Desktop host WSL verification requires a workspace copy or socket exposure.
-- **Not yet verified:** 100% line/branch coverage, Docker build, and final release readiness; container-level memory profiling remains a secondary evidence gap.
+- **Docker:** User-confirmed successful build/test/sample verification on a separate Rancher Desktop-connected machine using the unmodified Dockerfile.
+- **Not yet verified:** 100% line/branch coverage and final release readiness; container-level memory profiling remains a secondary evidence gap.
 
 ## Coverage policy
 

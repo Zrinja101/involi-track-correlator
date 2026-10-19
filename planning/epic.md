@@ -52,8 +52,8 @@ The correlator must make each decision within two seconds of report arrival, emi
 - Coverage baseline: 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target remains open.
 - Doxygen verification: Doxygen 1.9.6 generated `build/docs/html/index.html` successfully after public API documentation was added in `e83c62f`.
 - Local Release verification: configure, build, and CTest pass with `-j10`.
-- Docker verification: blocked because the current development container has no Docker CLI or Rancher socket mount; host WSL Rancher access is confirmed separately.
-- Remaining epic work: coverage improvement, Doxygen, peak-memory evidence, Docker verification, and final review.
+- Docker verification: passed on a separate Rancher Desktop-connected machine using the unmodified Dockerfile; image build, container tests, sample execution, and projected scorer results matched.
+- Remaining epic work: coverage improvement and final review.
 
 ### Completion-record policy
 

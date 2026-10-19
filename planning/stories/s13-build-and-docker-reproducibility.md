@@ -2,7 +2,7 @@
 
 **Parent feature:** [F6 — Quality, Documentation, and Reproducibility](../features/f6-quality-documentation-and-reproducibility.md)  
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** In progress; Docker blocked in current environment
+**Status:** Complete
 
 ## Story
 
@@ -21,4 +21,10 @@ As a user of the repository, I need documented local and containerized build pat
 
 - Local Debug and Release configure/build/test paths pass with `-j10`.
 - Dependencies are pinned through CMake archive URLs and hashes.
-- Docker verification is blocked because the current development container has no `docker` executable or mounted Rancher Desktop socket. Rancher Desktop works from the integrated Ubuntu WSL environment, but that environment does not contain this `/workspaces` checkout.
+- Docker verification was completed successfully on a separate Rancher Desktop-connected machine using the unmodified Dockerfile.
+- The image build, container test execution, sample run, and scorer output matched the projected results. The current development container remains unable to run Docker directly, but that environment limitation does not block the repository verification evidence.
+
+## Completion record
+
+- **Result:** Local Debug/Release and remote Rancher Docker build/test paths are verified.
+- **Commit:** `9656b2e` — `docs(S13): record local build and Docker blocker` (initial evidence); Docker completion is recorded in the follow-up evidence commit.

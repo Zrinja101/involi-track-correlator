@@ -27,12 +27,12 @@ Make correctness measurable and the finished project maintainable, reviewable, a
 
 ## Progress record
 
-- **Completed stories:** None yet; S11 is in progress and S12–S13 remain pending.
+- **Completed stories:** S12 and S13 are complete; S11 remains in progress pending the 100% line/branch coverage target.
 - **Available evidence:** clang-format and clang-tidy have passed during S1–S10 implementation steps, the pinned dependency/build setup is recorded in `22d6374` and `bef9fa`, and F01 calibration passes.
 - **Current calibration result:** F01–F08 and the holdout fixture pass their current functional checks; F04 has one expected retirement switch. F08 runtime is approximately 11.3 seconds for 10,000 reports, while the sample regression remains below target at 84.81% association, 121 switches, and 3 merged tracks.
 - **Memory evidence:** F08 child-process peak RSS is 10,856 KB; container-level profiling remains outstanding.
 - **Coverage baseline:** 89.6% line, 100% function, and 53.9% branch coverage; the 100% line/branch target remains open.
 - **Documentation status:** Doxygen 1.9.6 generation passes and produces `build/docs/html/index.html`; public API documentation was added in `e83c62f`.
 - **Build status:** Local Debug and Release configure/build/test paths pass with `-j10`.
-- **Container status:** Docker verification is blocked because the current development container lacks the Docker CLI/socket despite Rancher Desktop being available in the host WSL environment.
-- **Remaining work:** increase line/branch coverage, collect peak-memory evidence, and verify Docker from a connected environment.
+- **Container status:** Docker verification passed on a separate Rancher Desktop-connected machine using the unmodified Dockerfile.
+- **Remaining work:** increase line/branch coverage and complete final review.
