@@ -70,38 +70,8 @@ The program must build and pass its tests with the provided Dockerfile, unmodifi
 docker build -t correlator .
 docker run --rm -i correlator < data/sample/reports.jsonl > output.jsonl
 ```
-Dependencies are pinned through CMake `FetchContent` declarations:
-
-- **nlohmann/json v3.11.3:** JSONL report parsing and answer serialization.
-- **Catch2 v3.7.1:** C++ unit-test framework.
-- **vcpkg:** Installed by the reference Dockerfile for toolchain integration; project dependency versions remain pinned by the CMake declarations above.
-
-Add future dependencies through CMake (`FetchContent`, pinned to a tag or commit) or a vcpkg manifest
-(`vcpkg.json` with a `builtin-baseline`) and explain each dependency in one line here.
-
-## Documentation
-
-When Doxygen is installed, generate API documentation with:
-
-```sh
-cmake -S . -B build/Debug -G Ninja -DCMAKE_BUILD_TYPE=Debug
-cmake --build build/Debug --target doxygen
-```
-
-The generated HTML documentation is written under `build/docs/html/`.
-
-## Coverage
-
-Configure a dedicated instrumented build and run the unit suite:
-
-```sh
-cmake -S . -B build/Coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON
-cmake --build build/Coverage -j10
-ctest --test-dir build/Coverage --output-on-failure
-gcovr --root . --object-directory build/Coverage --filter 'src/.*' --txt-metric branch --print-summary
-```
-
-Run the synthetic fixtures and the sample through `build/Coverage/correlator` before collecting the report so executable paths are included.
+Add dependencies through CMake (`FetchContent`, pinned to a tag or commit) or a vcpkg manifest
+(`vcpkg.json` with a `builtin-baseline`). Explain each dependency in one line in your README.
 
 ## Scoring
 
