@@ -27,4 +27,4 @@ As a user of the repository, I need documented local and containerized build pat
 ## Completion record
 
 - **Result:** Local Debug/Release and remote Rancher Docker build/test paths are verified.
-- **Commit:** `9656b2e` — `docs(S13): record local build and Docker blocker` (initial evidence); Docker completion is recorded in the follow-up evidence commit.
+- **Commits:** `9656b2e` — `docs(S13): record local build and Docker blocker` (initial evidence); `4dbd0a6` — `docs(S13): record Docker verification completion`.
