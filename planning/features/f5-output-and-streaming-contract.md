@@ -1,7 +1,7 @@
 # F5 — Output and Streaming Contract
 
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** Implemented; scoring target pending
+**Status:** Complete
 **Stories:** [S9](../stories/s9-jsonl-output-and-cli-contract.md), [S10](../stories/s10-integration-contract-regression.md)
 
 ## Goal
@@ -28,4 +28,4 @@ Provide a robust stdin/stdout JSONL executable that emits exactly the required a
 
 - **Completed stories:** S9, S10.
 - **Result:** The executable now produces deterministic JSONL answers, integrates the association pipeline, and satisfies the output contract with zero scorer contract errors.
-- **Verification:** Completion records reference `eefc2e0` and `0b6e3e5`; sample association remains below the epic target.
+- **Verification:** Completion records reference `eefc2e0` and `0b6e3e5`; the final sample regression passes the epic scorer thresholds.

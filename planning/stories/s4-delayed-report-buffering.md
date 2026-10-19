@@ -22,6 +22,7 @@ Pending deadlines and conflict-component bounds must follow [ADR-002](../decisio
 - Source scope: bounded pending state in `src/arrival_scheduler.h` and `src/arrival_scheduler.cpp`.
 - Tests: `tests/correlator_tests.cpp`, including capacity-triggered finalization and delayed burst behavior.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Verification plan: [Verification Plan](../verification.md).
 - The default pending capacity is 4096 reports; tests use a small explicit capacity to exercise the bound.
 
 ## Completion record

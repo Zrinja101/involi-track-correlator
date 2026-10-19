@@ -26,6 +26,7 @@ As the correlator, I need each JSONL line converted into a typed report so downs
 - Source scope: `src/report.h`, `src/report_parser.h`, `src/report_parser.cpp`, and the `correlator_core` CMake target.
 - Tests: `tests/correlator_tests.cpp`, covering seven parser scenarios and 39 assertions.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Verification plan: [Verification Plan](../verification.md).
 - Deferred to S2: geographic range policy and application-level rejection/output behavior.
 
 ## Completion record

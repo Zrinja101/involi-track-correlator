@@ -20,6 +20,7 @@ As the correlator, I need deterministic arrival-clock scheduling so every decisi
 - Source scope: `src/arrival_scheduler.h`, `src/arrival_scheduler.cpp`, and the `correlator_core` CMake target.
 - Tests: `tests/correlator_tests.cpp`, covering exact deadlines, equal-deadline ordering, large gaps, EOF flush, and monotonic `at` values.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Verification plan: [Verification Plan](../verification.md).
 - Deferred to S4/S9: bounded pending-state policy and executable JSONL output integration.
 
 ## Completion record

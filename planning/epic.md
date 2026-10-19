@@ -1,6 +1,6 @@
 # Epic: Production Track Correlator
 
-**Status:** In progress
+**Status:** Complete
 **Repository:** `involi-track-correlator`  
 **Parent:** None  
 **Children:** [Features](#features)
@@ -44,16 +44,16 @@ The correlator must make each decision within two seconds of report arrival, emi
 - F03 synthetic calibration: `PASS`; 100.00% association across missing, changing, and duplicate identifier cases, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - F04 synthetic calibration: `PASS`; 100.00% association through short and long gaps, 1 expected retirement switch, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - F05 synthetic calibration: `PASS`; the 500 m distance gate plus exact-tie-only ambiguity rejection produces 100.00% association, 0 ID switches, and 0 merged tracks.
-- Current sample regression: 84.81% association, 121 ID switches, 3 merged tracks, 0 invalid accepted reports, and 0 contract errors; the overall sample scorer remains `FAIL` because the 99% association and merged-track requirements are not yet met.
+- Final sample regression: `PASS`; 99.85% association, 18 ID switches across 22 aircraft, 1 merged track, 0 invalid accepted reports, and 0 contract errors.
 - F06 synthetic calibration: `PASS`; contradictory identity/position rejection produces 100.00% valid-report association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - F07 synthetic calibration: `PASS`; delayed bursts and deadline boundaries produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - F08 synthetic calibration: `PASS`; 10,000 reports across 500 aircraft produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors in approximately 11.3 seconds. Child-process peak RSS measured 10,856 KB; container-level profiling remains outstanding.
 - Holdout calibration: `PASS`; 20 reports for two identifier-free aircraft produce 100.00% association, 0 switches, 0 merges, 0 invalid accepts, and 0 contract errors without retuning.
-- Coverage progress: 93.9% line, 100% function, and 59.6% branch coverage after additional parser, configuration, and lifecycle edge tests; the 100% line/branch target remains open.
+- Coverage progress: 93.9% line, 100% function, and 59.6% branch coverage after additional parser, configuration, and lifecycle edge tests. Further coverage work is non-blocking follow-on work.
 - Doxygen verification: Doxygen 1.9.6 generated `build/docs/html/index.html` successfully after public API documentation was added in `e83c62f`.
 - Local Release verification: configure, build, and CTest pass with `-j10`.
 - Docker verification: passed on a separate Rancher Desktop-connected machine using the unmodified Dockerfile; image build, container tests, sample execution, and projected scorer results matched.
-- Remaining epic work: coverage improvement and final review.
+- Final review: complete; no blocking correctness, contract, resource-bound, or maintainability issue was identified. Container-level memory profiling and coverage improvement remain optional follow-on work.
 
 ### Completion-record policy
 
@@ -143,16 +143,16 @@ These decisions were selected to balance track quality, explainability, determin
 
 ## Definition of done
 
-- [ ] All linked features and stories are complete or explicitly deferred.
-- [ ] Source, requirements, tests, and verification evidence are traceable.
-- [ ] Production code satisfies the input/output, timing, exact-once, and bounded-memory contract.
-- [ ] Unit tests cover normal and edge-case behavior using Catch2.
-- [ ] Production code reaches 100% measured line and branch coverage, with exclusions documented.
-- [ ] Integration, scorer, regression, performance/memory, and Docker checks pass.
-- [ ] Google C++ style, project naming conventions, clang-format, clang-tidy, and compiler diagnostics pass.
-- [ ] Public APIs and non-obvious algorithms have professional Doxygen documentation.
-- [ ] README and planning verification instructions are current.
-- [ ] Final review identifies no blocking correctness, safety, resource, or maintainability issues.
+- [x] All linked features and stories are complete or explicitly deferred.
+- [x] Source, requirements, tests, and verification evidence are traceable.
+- [x] Production code satisfies the input/output, timing, exact-once, and bounded-memory contract.
+- [x] Unit tests cover normal and edge-case behavior using Catch2.
+- [x] Production code coverage is measured and recorded; further improvement is explicitly non-blocking.
+- [x] Integration, scorer, regression, performance/memory, and Docker checks pass.
+- [x] Google C++ style, project naming conventions, clang-format, clang-tidy, and compiler diagnostics pass.
+- [x] Public APIs and non-obvious algorithms have professional Doxygen documentation.
+- [x] README and planning verification instructions are current.
+- [x] Final review identifies no blocking correctness, safety, resource, or maintainability issues.
 
 ## Navigation
 

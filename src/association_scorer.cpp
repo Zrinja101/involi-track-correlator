@@ -40,16 +40,6 @@ AssociationResult AssociationScorer::Evaluate(
 AssociationResult AssociationScorer::Evaluate(
     const Report& report, std::span<const TrackState* const> tracks) const {
   AssociationResult result;
-  bool identifier_matches_active_track = false;
-  if (report.identifier.has_value()) {
-    for (const TrackState* track : tracks) {
-      if (IdentifierMatcher::Compare(report, *track) ==
-          IdentifierRelation::kMatch) {
-        identifier_matches_active_track = true;
-        break;
-      }
-    }
-  }
   for (const TrackState* track : tracks) {
     const double age_secs =
         report.arrival_time_secs - track->latest_report.arrival_time_secs;
@@ -82,11 +72,10 @@ AssociationResult AssociationScorer::Evaluate(
     double altitude_score = 0.5;
     if (report.altitude_m.has_value() &&
         track->latest_report.altitude_m.has_value()) {
-      const double altitude_difference_m =
-          std::abs(report.altitude_m.value() -
-                   track->latest_report.altitude_m.value());
-      altitude_score = std::max(
-          0.0, 1.0 - altitude_difference_m / kAltitudeEvidenceRangeM);
+      const double altitude_difference_m = std::abs(
+          report.altitude_m.value() - track->latest_report.altitude_m.value());
+      altitude_score =
+          std::max(0.0, 1.0 - altitude_difference_m / kAltitudeEvidenceRangeM);
     }
     const double score = config_.distance_weight * distance_score +
                          config_.age_weight * age_score +
@@ -138,8 +127,8 @@ double AssociationScorer::CalculateDistanceM(const Report& report,
   double predicted_longitude_degs = latest_observation->longitude_degs;
   const Report* previous_observation = nullptr;
   for (const Report& observation : track.history) {
-    const double interval_secs = latest_observation->receiver_time_secs -
-                                 observation.receiver_time_secs;
+    const double interval_secs =
+        latest_observation->receiver_time_secs - observation.receiver_time_secs;
     if (interval_secs >= kMinimumVelocityIntervalSecs &&
         (previous_observation == nullptr ||
          observation.receiver_time_secs >
@@ -161,12 +150,12 @@ double AssociationScorer::CalculateDistanceM(const Report& report,
           std::min(distance_m / interval_secs * prediction_age_secs,
                    kMaximumPredictionSpeedMps * prediction_age_secs) /
           distance_m;
-      predicted_latitude_degs +=
-          (latest_observation->latitude_degs -
-           previous_observation->latitude_degs) * scale;
-      predicted_longitude_degs +=
-          (latest_observation->longitude_degs -
-           previous_observation->longitude_degs) * scale;
+      predicted_latitude_degs += (latest_observation->latitude_degs -
+                                  previous_observation->latitude_degs) *
+                                 scale;
+      predicted_longitude_degs += (latest_observation->longitude_degs -
+                                   previous_observation->longitude_degs) *
+                                  scale;
     }
   }
 

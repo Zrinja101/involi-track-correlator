@@ -455,7 +455,8 @@ TEST_CASE("AssociationScorer selects the nearest feasible track") {
   CHECK(result.candidates.front().track_id == "Tnear");
 }
 
-TEST_CASE("AssociationScorer ignores receiver duplicate intervals in prediction") {
+TEST_CASE(
+    "AssociationScorer ignores receiver duplicate intervals in prediction") {
   correlator::Report first_report = MakeValidReport();
   first_report.arrival_time_secs = 1.0;
   first_report.longitude_degs = 7.0;
@@ -500,7 +501,8 @@ TEST_CASE("AssociationScorer uses altitude to separate nearby aircraft") {
   CHECK(result.assigned_track_id.value() == "Tmatch");
 }
 
-TEST_CASE("AssociationScorer rejects candidates with missing altitude evidence") {
+TEST_CASE(
+    "AssociationScorer rejects candidates with missing altitude evidence") {
   correlator::Report query = MakeValidReport();
   query.altitude_m = std::nullopt;
   correlator::Report track_report = MakeValidReport();

@@ -23,6 +23,7 @@ The implementation must follow [ADR-002](../decisions/adr-002-association-model-
 - Source scope: `src/association_scorer.h`, `src/association_scorer.cpp`, and the `correlator_core` CMake target.
 - Tests: `tests/correlator_tests.cpp`, covering distance ranking, identifier evidence, missing identifiers, stale/distant gates, and ambiguity rejection.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Verification plan: [Verification Plan](../verification.md).
 - Initial scoring weights and gates are explicit constructor configuration and remain subject to ADR-003 calibration.
 
 ## Completion record

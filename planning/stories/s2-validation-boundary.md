@@ -20,6 +20,7 @@ As the correlator, I need a clear distinction between malformed input, physicall
 - Source scope: `src/report_validator.h`, `src/report_validator.cpp`, and the `correlator_core` CMake target.
 - Tests: `tests/correlator_tests.cpp`, covering receiver, finite-value, and geographic-boundary validation.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Verification plan: [Verification Plan](../verification.md).
 - Deferred to S3/S9: scheduler state, exact-once application output, and stdout/stderr integration behavior.
 
 ## Completion record

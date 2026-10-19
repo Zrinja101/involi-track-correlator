@@ -1,6 +1,6 @@
 # ADR-003: Calibration and Synthetic Fixture Strategy
 
-**Status:** In progress
+**Status:** Accepted
 **Parent epic:** [Production Track Correlator](../epic.md)
 **Related design:** [ADR-002](adr-002-association-model-and-bounds.md)
 
@@ -151,8 +151,8 @@ Generate long streams with many aircraft, stale tracks, pending reports, and con
 - **Result:** `PASS`; 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors without parameter changes.
 - **Interpretation:** The current parameter set generalizes to this small holdout scenario. This does not replace larger holdout and performance evidence.
 
-## Open items
+## Follow-up items
 
-- Select final parameter values after the complete fixture set exists.
-- Collect peak-state/RSS evidence with an available measurement tool.
-- Complete S12 Doxygen and S13 Docker/reproducibility work.
+- The selected parameters are captured in the implementation configuration and exercised by F01–F08, the holdout fixture, and the final sample regression.
+- F08 records 10,856 KB child-process peak RSS; container-level memory profiling remains optional follow-on evidence.
+- S12 Doxygen and S13 Docker/reproducibility work are complete. Additional coverage improvement is also non-blocking follow-on work.

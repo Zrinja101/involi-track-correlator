@@ -1,7 +1,7 @@
 # F4 — Validation and Rejection
 
 **Parent epic:** [Production Track Correlator](../epic.md)  
-**Status:** Implemented; integration hardening pending
+**Status:** Complete
 **Stories:** [S2](../stories/s2-validation-boundary.md), [S8](../stories/s8-corrupted-and-implausible-reports.md)
 
 ## Goal

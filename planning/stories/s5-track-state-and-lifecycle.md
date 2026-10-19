@@ -23,6 +23,7 @@ History retention, active-track limits, and retirement behavior must follow the 
 - Source scope: `src/track_store.h`, `src/track_store.cpp`, and the `correlator_core` CMake target.
 - Tests: `tests/correlator_tests.cpp`, covering creation, updates, history eviction, retirement, name monotonicity, and active-track capacity.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Verification plan: [Verification Plan](../verification.md).
 - Defaults: 4,096 active tracks, 32 observations per history, and 60 seconds to retirement; all limits are constructor-configurable.
 
 ## Completion record

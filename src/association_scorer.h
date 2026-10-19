@@ -1,7 +1,6 @@
 #ifndef INVOLI_TRACK_CORRELATOR_SRC_ASSOCIATION_SCORER_H_
 #define INVOLI_TRACK_CORRELATOR_SRC_ASSOCIATION_SCORER_H_
 
-#include <cstddef>
 #include <optional>
 #include <span>
 #include <string>

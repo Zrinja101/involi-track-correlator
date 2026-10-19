@@ -20,6 +20,7 @@ As a pipeline user, I need the executable to consume stdin JSONL and produce onl
 - Source scope: `src/answer_writer.h`, `src/answer_writer.cpp`, `src/main.cpp`, and the integrated core pipeline.
 - Tests: `tests/correlator_tests.cpp` for serialization and `tests/cli_contract_test.py` for executable stdin/stdout behavior.
 - Verification: Debug configure/build, CTest, clang-format, clang-tidy, and executable JSONL contract checks completed successfully.
+- Verification plan: [Verification Plan](../verification.md).
 - Association remains intentionally unimplemented at this boundary; valid reports currently produce `track: null` until the association integration stories are complete.
 
 ## Completion record

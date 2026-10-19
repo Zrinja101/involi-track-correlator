@@ -21,6 +21,7 @@ As the correlator, I need identifier evidence to be useful without treating iden
 - Source scope: `src/identifier_matcher.h`, `src/identifier_matcher.cpp`, and the history-aware identifier scoring path in `src/association_scorer.cpp`.
 - Tests: `tests/correlator_tests.cpp`, covering historical identifier matches, identifier changes, duplicate identifiers, missing identifiers, and conflicts.
 - Verification: Debug configure/build, CTest, clang-format, and clang-tidy completed successfully.
+- Verification plan: [Verification Plan](../verification.md).
 - Identifier history is bounded by the S5 track-history limit; final weights remain subject to ADR-003 calibration.
 
 ## Completion record

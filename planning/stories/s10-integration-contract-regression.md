@@ -20,6 +20,7 @@ As a maintainer, I need executable-level regression tests that verify the comple
 - Source scope: `src/main.cpp`, `src/track_store.cpp`, and the integrated parser, scheduler, plausibility, association, and writer components.
 - Tests: `tests/cli_contract_test.py` and the full Catch2 unit suite.
 - Verification: Debug configure/build, CTest, executable contract test, and sample scorer baseline completed.
+- Verification plan: [Verification Plan](../verification.md).
 - The S9 baseline scored 0% association with zero assigned tracks; this story establishes the first end-to-end assignment path.
 
 ## Completion record
