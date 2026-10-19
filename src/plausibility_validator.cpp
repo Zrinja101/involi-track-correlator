@@ -1,37 +1,30 @@
 #include "plausibility_validator.h"
 
 #include <cmath>
-#include <numbers>
+#include <stdexcept>
 #include <string>
+
+#include "geo_utils.h"
 
 namespace correlator {
 namespace {
-
-constexpr double kMetersPerDegree = 111320.0;
-constexpr double kDegreesToRadians = std::numbers::pi / 180.0;
 
 PlausibilityResult Failure(PlausibilityErrorCode code, const char* message) {
   return PlausibilityResult{.error = PlausibilityError{
                                 .code = code, .message = std::string(message)}};
 }
 
-double HorizontalDistanceM(const Report& report,
-                           const Report& previous_report) {
-  const double reference_latitude_rads =
-      (report.latitude_degs + previous_report.latitude_degs) * 0.5 *
-      kDegreesToRadians;
-  const double north_m =
-      (report.latitude_degs - previous_report.latitude_degs) * kMetersPerDegree;
-  const double east_m =
-      (report.longitude_degs - previous_report.longitude_degs) *
-      kMetersPerDegree * std::cos(reference_latitude_rads);
-  return std::hypot(north_m, east_m);
-}
-
 }  // namespace
 
 PlausibilityValidator::PlausibilityValidator(PlausibilityConfig config)
-    : config_(config) {}
+    : config_(config) {
+  if (!std::isfinite(config_.max_horizontal_speed_mps) ||
+      config_.max_horizontal_speed_mps <= 0.0 ||
+      !std::isfinite(config_.max_vertical_speed_mps) ||
+      config_.max_vertical_speed_mps <= 0.0) {
+    throw std::invalid_argument("Plausibility configuration is invalid");
+  }
+}
 
 PlausibilityResult PlausibilityValidator::Validate(
     const Report& report, const Report& previous_report) const {
@@ -42,7 +35,10 @@ PlausibilityResult PlausibilityValidator::Validate(
                    "Report arrival time precedes the prior observation");
   }
   if (elapsed_secs == 0.0) {
-    if (HorizontalDistanceM(report, previous_report) == 0.0 &&
+    if (CalculateHorizontalDistanceM(report.latitude_degs,
+                                     report.longitude_degs,
+                                     previous_report.latitude_degs,
+                                     previous_report.longitude_degs) == 0.0 &&
         report.altitude_m == previous_report.altitude_m) {
       return PlausibilityResult{.error = std::nullopt};
     }
@@ -50,8 +46,10 @@ PlausibilityResult PlausibilityValidator::Validate(
                    "Different observations share an arrival timestamp");
   }
 
-  if (HorizontalDistanceM(report, previous_report) / elapsed_secs >
-      config_.max_horizontal_speed_mps) {
+  const double horizontal_distance_m = CalculateHorizontalDistanceM(
+      report.latitude_degs, report.longitude_degs,
+      previous_report.latitude_degs, previous_report.longitude_degs);
+  if (horizontal_distance_m / elapsed_secs > config_.max_horizontal_speed_mps) {
     return Failure(PlausibilityErrorCode::kHorizontalSpeedExceeded,
                    "Horizontal movement exceeds the configured speed limit");
   }

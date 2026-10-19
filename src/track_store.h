@@ -55,8 +55,12 @@ class TrackStore {
   /// Returns the active track, or null when no track has that name.
   [[nodiscard]] const TrackState* FindTrack(std::string_view track_id) const;
 
-  /// Returns a bounded value snapshot for association evaluation.
-  [[nodiscard]] std::vector<TrackState> Snapshot() const;
+  /// Returns non-owning references to the currently active tracks.
+  ///
+  /// The returned pointers remain valid until the store is mutated or
+  /// destroyed. The snapshot itself is a bounded container, but does not copy
+  /// each track's observation history.
+  [[nodiscard]] std::vector<const TrackState*> Snapshot() const;
 
   /// Removes tracks inactive for at least the configured retirement interval.
   ///

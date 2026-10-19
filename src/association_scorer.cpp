@@ -2,42 +2,61 @@
 
 #include <algorithm>
 #include <cmath>
-#include <numbers>
+#include <stdexcept>
 
+#include "geo_utils.h"
 #include "identifier_matcher.h"
 
 namespace correlator {
-namespace {
-
-constexpr double kMetersPerDegree = 111320.0;
-constexpr double kDegreesToRadians = std::numbers::pi / 180.0;
-
-}  // namespace
 
 AssociationScorer::AssociationScorer(AssociationConfig config)
-    : config_(config) {}
+    : config_(config) {
+  if (!std::isfinite(config_.max_track_age_secs) ||
+      config_.max_track_age_secs <= 0.0 ||
+      !std::isfinite(config_.max_distance_m) || config_.max_distance_m <= 0.0 ||
+      !std::isfinite(config_.min_score) ||
+      !std::isfinite(config_.min_score_margin) ||
+      config_.min_score_margin < 0.0 ||
+      !std::isfinite(config_.distance_weight) ||
+      !std::isfinite(config_.age_weight) ||
+      !std::isfinite(config_.identifier_weight) ||
+      config_.distance_weight < 0.0 || config_.age_weight < 0.0 ||
+      config_.identifier_weight < 0.0) {
+    throw std::invalid_argument("Association configuration is invalid");
+  }
+}
 
 AssociationResult AssociationScorer::Evaluate(
     const Report& report, std::span<const TrackState> tracks) const {
+  std::vector<const TrackState*> track_references;
+  track_references.reserve(tracks.size());
+  for (const TrackState& track : tracks) {
+    track_references.push_back(&track);
+  }
+  return Evaluate(report, track_references);
+}
+
+AssociationResult AssociationScorer::Evaluate(
+    const Report& report, std::span<const TrackState* const> tracks) const {
   AssociationResult result;
   bool identifier_matches_active_track = false;
   if (report.identifier.has_value()) {
-    for (const TrackState& track : tracks) {
-      if (IdentifierMatcher::Compare(report, track) ==
+    for (const TrackState* track : tracks) {
+      if (IdentifierMatcher::Compare(report, *track) ==
           IdentifierRelation::kMatch) {
         identifier_matches_active_track = true;
         break;
       }
     }
   }
-  for (const TrackState& track : tracks) {
+  for (const TrackState* track : tracks) {
     const double age_secs =
-        report.arrival_time_secs - track.latest_report.arrival_time_secs;
+        report.arrival_time_secs - track->latest_report.arrival_time_secs;
     if (age_secs < 0.0 || age_secs > config_.max_track_age_secs) {
       continue;
     }
 
-    const double distance_m = CalculateDistanceM(report, track, age_secs);
+    const double distance_m = CalculateDistanceM(report, *track, age_secs);
     if (distance_m > config_.max_distance_m) {
       continue;
     }
@@ -45,7 +64,7 @@ AssociationResult AssociationScorer::Evaluate(
     const double distance_score = 1.0 - distance_m / config_.max_distance_m;
     const double age_score = 1.0 - age_secs / config_.max_track_age_secs;
     const IdentifierRelation identifier_relation =
-        IdentifierMatcher::Compare(report, track);
+        IdentifierMatcher::Compare(report, *track);
     if (identifier_matches_active_track &&
         identifier_relation == IdentifierRelation::kConflict) {
       result.rejected_for_identifier_conflict = true;
@@ -59,7 +78,7 @@ AssociationResult AssociationScorer::Evaluate(
                          config_.age_weight * age_score +
                          config_.identifier_weight * identifier_score;
     result.candidates.push_back(AssociationCandidate{
-        .track_id = track.track_id, .score = score, .distance_m = distance_m});
+        .track_id = track->track_id, .score = score, .distance_m = distance_m});
   }
 
   std::sort(result.candidates.begin(), result.candidates.end(),
@@ -103,14 +122,9 @@ double AssociationScorer::CalculateDistanceM(const Report& report,
     }
   }
 
-  const double reference_latitude_rads =
-      (report.latitude_degs + predicted_latitude_degs) * 0.5 *
-      kDegreesToRadians;
-  const double north_m =
-      (report.latitude_degs - predicted_latitude_degs) * kMetersPerDegree;
-  const double east_m = (report.longitude_degs - predicted_longitude_degs) *
-                        kMetersPerDegree * std::cos(reference_latitude_rads);
-  return std::hypot(north_m, east_m);
+  return CalculateHorizontalDistanceM(
+      report.latitude_degs, report.longitude_degs, predicted_latitude_degs,
+      predicted_longitude_degs);
 }
 
 }  // namespace correlator

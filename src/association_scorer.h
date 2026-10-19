@@ -75,6 +75,10 @@ class AssociationScorer {
   [[nodiscard]] AssociationResult Evaluate(
       const Report& report, std::span<const TrackState> tracks) const;
 
+  /// Evaluates non-owning track references without copying track state.
+  [[nodiscard]] AssociationResult Evaluate(
+      const Report& report, std::span<const TrackState* const> tracks) const;
+
  private:
   [[nodiscard]] double CalculateDistanceM(const Report& report,
                                           const TrackState& track,

@@ -747,6 +747,13 @@ TEST_CASE(
   REQUIRE_THROWS_AS(
       correlator::TrackStore(2U, 2U, std::numeric_limits<double>::quiet_NaN()),
       std::invalid_argument);
+  REQUIRE_THROWS_AS(correlator::AssociationScorer(
+                        correlator::AssociationConfig{.max_distance_m = 0.0}),
+                    std::invalid_argument);
+  REQUIRE_THROWS_AS(
+      correlator::PlausibilityValidator(
+          correlator::PlausibilityConfig{.max_horizontal_speed_mps = 0.0}),
+      std::invalid_argument);
 
   correlator::TrackStore store;
   const correlator::Report report = MakeValidReport();

@@ -54,11 +54,11 @@ const TrackState* TrackStore::FindTrack(std::string_view track_id) const {
   return track_iterator == tracks_.end() ? nullptr : &track_iterator->second;
 }
 
-std::vector<TrackState> TrackStore::Snapshot() const {
-  std::vector<TrackState> snapshot;
+std::vector<const TrackState*> TrackStore::Snapshot() const {
+  std::vector<const TrackState*> snapshot;
   snapshot.reserve(tracks_.size());
   for (const auto& entry : tracks_) {
-    snapshot.push_back(entry.second);
+    snapshot.push_back(&entry.second);
   }
   return snapshot;
 }

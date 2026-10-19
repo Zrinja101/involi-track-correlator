@@ -40,7 +40,8 @@ int main() try {
       pending_reports.erase(pending_iterator);
       static_cast<void>(
           track_store.RetireStaleTracks(report.arrival_time_secs));
-      const std::vector<correlator::TrackState> tracks = track_store.Snapshot();
+      const std::vector<const correlator::TrackState*> tracks =
+          track_store.Snapshot();
       const correlator::AssociationResult association =
           association_scorer.Evaluate(report, tracks);
       std::optional<std::string> track_id;

@@ -18,12 +18,6 @@ IdentifierRelation IdentifierMatcher::Compare(const Report& report,
       return IdentifierRelation::kMatch;
     }
   }
-  if (!has_track_identifier && track.latest_report.identifier.has_value()) {
-    has_track_identifier = true;
-    if (track.latest_report.identifier == report.identifier) {
-      return IdentifierRelation::kMatch;
-    }
-  }
   return has_track_identifier ? IdentifierRelation::kConflict
                               : IdentifierRelation::kMissing;
 }
