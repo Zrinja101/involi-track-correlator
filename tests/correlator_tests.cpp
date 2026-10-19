@@ -1,9 +1,11 @@
 #include <catch2/catch_test_macros.hpp>
 #include <cstddef>
+#include <functional>
 #include <limits>
 #include <nlohmann/json.hpp>
 #include <optional>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -632,6 +634,104 @@ TEST_CASE("AnswerWriter serializes assigned and rejected answers") {
   CHECK(rejected.at("report") == 4U);
   CHECK(rejected.at("track").is_null());
   CHECK(rejected.at("at") == 13.0);
+}
+
+TEST_CASE("ReportParser rejects each required field omission") {
+  const std::vector<std::string> lines = {
+      R"({"rx":"R1","t":9.5,"lat":47.0,"lon":7.0})",
+      R"({"arr":10.0,"rx":"R1","lat":47.0,"lon":7.0})",
+      R"({"arr":10.0,"rx":"R1","t":9.5,"lon":7.0})",
+      R"({"arr":10.0,"rx":"R1","t":9.5,"lat":47.0})",
+      R"({"arr":10.0,"t":9.5,"lat":47.0,"lon":7.0})",
+  };
+
+  for (const std::string& line : lines) {
+    const correlator::ParseResult result =
+        correlator::ReportParser::Parse(line, 0U);
+    REQUIRE_FALSE(result.IsSuccess());
+    REQUIRE(result.error.has_value());
+    CHECK(result.error->code == correlator::ParseErrorCode::kMissingField);
+  }
+}
+
+TEST_CASE("ReportParser rejects optional identifier with an incorrect type") {
+  const correlator::ParseResult result = correlator::ReportParser::Parse(
+      R"({"arr":10.0,"rx":"R1","t":9.5,"lat":47.0,"lon":7.0,"id":7})", 0U);
+
+  REQUIRE_FALSE(result.IsSuccess());
+  REQUIRE(result.error.has_value());
+  CHECK(result.error->code == correlator::ParseErrorCode::kInvalidType);
+}
+
+TEST_CASE("ReportValidator rejects each non-finite required value") {
+  const std::vector<std::function<void(correlator::Report&)>> mutations = {
+      [](correlator::Report& report) {
+        report.receiver_time_secs = std::numeric_limits<double>::infinity();
+      },
+      [](correlator::Report& report) {
+        report.latitude_degs = std::numeric_limits<double>::quiet_NaN();
+      },
+      [](correlator::Report& report) {
+        report.longitude_degs = std::numeric_limits<double>::infinity();
+      },
+  };
+
+  for (const auto& mutation : mutations) {
+    correlator::Report report = MakeValidReport();
+    mutation(report);
+    const correlator::ValidationResult result =
+        correlator::ReportValidator::Validate(report);
+    REQUIRE_FALSE(result.IsValid());
+    REQUIRE(result.error.has_value());
+    CHECK(result.error->code ==
+          correlator::ValidationErrorCode::kNonFiniteValue);
+  }
+}
+
+TEST_CASE(
+    "PlausibilityValidator rejects decreasing time and moving duplicates") {
+  const correlator::Report previous_report = MakeValidReport();
+  correlator::Report earlier_report = previous_report;
+  earlier_report.arrival_time_secs = 9.0;
+  CHECK(correlator::PlausibilityValidator()
+            .Validate(earlier_report, previous_report)
+            .error->code ==
+        correlator::PlausibilityErrorCode::kNonIncreasingTime);
+
+  correlator::Report moving_duplicate = previous_report;
+  moving_duplicate.longitude_degs += 0.001;
+  const correlator::PlausibilityResult result =
+      correlator::PlausibilityValidator().Validate(moving_duplicate,
+                                                   previous_report);
+  REQUIRE(result.error.has_value());
+  CHECK(result.error->code ==
+        correlator::PlausibilityErrorCode::kNonIncreasingTime);
+}
+
+TEST_CASE(
+    "Scheduler and track store reject invalid configuration and unknown "
+    "tracks") {
+  REQUIRE_THROWS_AS(correlator::ArrivalScheduler(0U), std::invalid_argument);
+  REQUIRE_THROWS_AS(correlator::TrackStore(0U), std::invalid_argument);
+
+  correlator::TrackStore store;
+  const correlator::Report report = MakeValidReport();
+  CHECK_FALSE(store.UpdateTrack("missing", report));
+  CHECK(store.FindTrack("missing") == nullptr);
+}
+
+TEST_CASE("AssociationScorer rejects candidates below its minimum score") {
+  correlator::Report report = MakeValidReport();
+  const std::vector<correlator::TrackState> tracks = {
+      MakeTrack("T1", MakeValidReport()),
+  };
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer(
+          correlator::AssociationConfig{.min_score = 2.0})
+          .Evaluate(report, tracks);
+
+  REQUIRE(result.candidates.size() == 1U);
+  CHECK_FALSE(result.assigned_track_id.has_value());
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,

@@ -28,5 +28,6 @@ Synthetic fixture families, calibration procedure, and holdout policy must follo
 - **F08 result:** 10,000-report/500-aircraft resource fixture passes with 100.00% association, zero switches, merges, invalid accepts, and contract errors; runtime was approximately 11.3 seconds.
 - **F08 memory evidence:** Python child-process resource measurement recorded 10,856 KB peak RSS for the correlator. Container-level memory evidence remains outstanding.
 - **Holdout result:** The 20-report, two-aircraft holdout passes with 100.00% association, zero switches, merges, invalid accepts, and contract errors without retuning.
-- **Coverage baseline:** The dedicated `ENABLE_COVERAGE` build and gcovr report currently measure 89.6% line, 100% function, and 53.9% branch coverage after running the unit suite, synthetic fixtures, and sample. The 100% line/branch target is not yet met.
+- **Coverage progress:** The dedicated `ENABLE_COVERAGE` build and gcovr report now measure 93.7% line, 100% function, and 58.3% branch coverage after targeted edge tests, CLI error-path execution, unit tests, synthetic fixtures, and sample. The 100% line/branch target is not yet met.
+- **Test suite:** 46 test cases and 187 assertions pass.
 - **Remaining:** Increase coverage, measure peak memory, and complete resource/performance evidence.

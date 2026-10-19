@@ -49,7 +49,7 @@ The correlator must make each decision within two seconds of report arrival, emi
 - F07 synthetic calibration: `PASS`; delayed bursts and deadline boundaries produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - F08 synthetic calibration: `PASS`; 10,000 reports across 500 aircraft produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors in approximately 11.3 seconds. Child-process peak RSS measured 10,856 KB; container-level profiling remains outstanding.
 - Holdout calibration: `PASS`; 20 reports for two identifier-free aircraft produce 100.00% association, 0 switches, 0 merges, 0 invalid accepts, and 0 contract errors without retuning.
-- Coverage baseline: 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target remains open.
+- Coverage progress: 93.7% line, 100% function, and 58.3% branch coverage after targeted edge tests, CLI error-path execution, unit, synthetic, and sample execution; the 100% line/branch target remains open.
 - Doxygen verification: Doxygen 1.9.6 generated `build/docs/html/index.html` successfully after public API documentation was added in `e83c62f`.
 - Local Release verification: configure, build, and CTest pass with `-j10`.
 - Docker verification: passed on a separate Rancher Desktop-connected machine using the unmodified Dockerfile; image build, container tests, sample execution, and projected scorer results matched.

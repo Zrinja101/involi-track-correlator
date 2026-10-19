@@ -88,7 +88,7 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **F07 calibration:** Seven-report delayed-burst/deadline fixture passes with 100.00% association, 0 switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - **F08 calibration:** 10,000-report/500-aircraft resource fixture passes functionally in approximately 11.3 seconds with zero contract errors; Python child-process measurement recorded 10,856 KB peak RSS.
 - **Holdout calibration:** 20-report, two-aircraft identifier-free fixture passes with 100.00% association and zero contract errors without retuning.
-- **Coverage baseline:** Dedicated coverage build reports 89.6% line, 100% function, and 53.9% branch coverage after unit, synthetic, and sample execution; the 100% line/branch target is not met.
+- **Coverage progress:** Dedicated coverage build reports 93.7% line, 100% function, and 58.3% branch coverage after targeted edge tests, CLI error-path execution, unit, synthetic, and sample execution; the 100% line/branch target is not met.
 - **Doxygen:** Doxygen 1.9.6 generated `build/docs/html/index.html` successfully after the public API documentation commit `e83c62f`.
 - **Local Release:** Configure, build, and CTest pass with bounded parallelism.
 - **Docker:** User-confirmed successful build/test/sample verification on a separate Rancher Desktop-connected machine using the unmodified Dockerfile.
