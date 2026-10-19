@@ -44,6 +44,12 @@ struct AssociationConfig {
   double identifier_weight = 0.2;
   /// Weight applied to optional altitude evidence.
   double altitude_weight = 0.2;
+  /// Minimum observation interval used to estimate track velocity, in seconds.
+  double minimum_velocity_interval_secs = kMinimumVelocityIntervalSecs;
+  /// Maximum speed allowed when extrapolating a track, in metres per second.
+  double maximum_prediction_speed_mps = kMaximumPredictionSpeedMps;
+  /// Altitude difference at which altitude evidence becomes zero, in metres.
+  double altitude_evidence_range_m = kAltitudeEvidenceRangeM;
 };
 
 /// One scored, feasible track candidate.

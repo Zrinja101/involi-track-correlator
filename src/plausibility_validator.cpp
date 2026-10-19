@@ -29,7 +29,7 @@ PlausibilityValidator::PlausibilityValidator(PlausibilityConfig config)
 PlausibilityResult PlausibilityValidator::Validate(
     const Report& report, const Report& previous_report) const {
   const double elapsed_secs =
-      report.arrival_time_secs - previous_report.arrival_time_secs;
+      report.receiver_time_secs - previous_report.receiver_time_secs;
   if (elapsed_secs < 0.0) {
     return Failure(PlausibilityErrorCode::kNonIncreasingTime,
                    "Report arrival time precedes the prior observation");

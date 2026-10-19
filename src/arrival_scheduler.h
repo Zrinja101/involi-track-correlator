@@ -26,7 +26,8 @@ class ArrivalScheduler {
   ///
   /// A zero capacity is invalid and causes std::invalid_argument to be thrown.
   explicit ArrivalScheduler(
-      std::size_t max_pending_reports = kDefaultMaxPendingReports);
+      std::size_t max_pending_reports = kDefaultMaxPendingReports,
+      double decision_window_secs = kDecisionWindowSecs);
 
   // Adds a report and returns any reports that became due at its arrival time.
   /// Adds a report and returns decisions due at its arrival time.
@@ -60,6 +61,7 @@ class ArrivalScheduler {
   bool has_current_time_ = false;
   bool has_last_at_ = false;
   std::size_t max_pending_reports_;
+  double decision_window_secs_;
 };
 
 }  // namespace correlator

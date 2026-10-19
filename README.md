@@ -64,6 +64,16 @@ Rules:
 
 ## Build and run
 
+The executable uses built-in defaults matching the checked-in
+[`config/default.json`](config/default.json). Override them at startup with
+`--config path.json`; malformed, unknown, non-finite, and out-of-range values
+are rejected before stdin is read. The configuration covers association and
+plausibility thresholds, scheduler capacity/window, and track-store limits.
+
+```sh
+./build/Debug/correlator --config config/default.json < data/sample/reports.jsonl
+```
+
 The program must build and pass its tests with the provided Dockerfile, unmodified:
 
 ```sh

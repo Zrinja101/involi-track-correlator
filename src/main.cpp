@@ -11,14 +11,33 @@
 #include "answer_writer.h"
 #include "arrival_scheduler.h"
 #include "association_scorer.h"
+#include "plausibility_validator.h"
 #include "report_parser.h"
 #include "report_validator.h"
+#include "runtime_config.h"
 #include "track_store.h"
 
-int main() try {
-  correlator::ArrivalScheduler scheduler;
-  correlator::TrackStore track_store;
-  correlator::AssociationScorer association_scorer;
+int main(int argc, char* argv[]) try {
+  std::optional<std::string> config_path;
+  for (int argument_index = 1; argument_index < argc; ++argument_index) {
+    if (std::string(argv[argument_index]) == "--config" &&
+        argument_index + 1 < argc) {
+      config_path = argv[++argument_index];
+    } else {
+      throw std::runtime_error("usage: correlator [--config path.json]");
+    }
+  }
+  const correlator::RuntimeConfig config =
+      config_path.has_value()
+          ? correlator::LoadRuntimeConfig(config_path.value())
+          : correlator::DefaultRuntimeConfig();
+  correlator::ArrivalScheduler scheduler(config.max_pending_reports,
+                                         config.decision_window_secs);
+  correlator::TrackStore track_store(config.max_active_tracks,
+                                     config.max_track_history,
+                                     config.track_retirement_secs);
+  correlator::AssociationScorer association_scorer(config.association);
+  correlator::PlausibilityValidator plausibility_validator(config.plausibility);
   std::unordered_map<std::size_t, correlator::Report> pending_reports;
   std::size_t report_index = 0U;
   double last_at_secs = 0.0;
@@ -47,9 +66,26 @@ int main() try {
       if (association.assigned_track_id.has_value()) {
         const correlator::TrackState* track =
             track_store.FindTrack(association.assigned_track_id.value());
-        if (track != nullptr &&
-            track_store.UpdateTrack(association.assigned_track_id.value(),
-                                    report)) {
+        const correlator::Report* predecessor = nullptr;
+        if (track != nullptr) {
+          for (const correlator::Report& observation : track->history) {
+            if (observation.receiver == report.receiver &&
+                observation.receiver_time_secs <= report.receiver_time_secs &&
+                (predecessor == nullptr ||
+                 observation.receiver_time_secs >
+                     predecessor->receiver_time_secs)) {
+              predecessor = &observation;
+            }
+          }
+        }
+        const bool plausible =
+            predecessor == nullptr ||
+            plausibility_validator.Validate(report, *predecessor).IsValid();
+        if (!plausible) {
+          std::cerr << "report " << report.report_index
+                    << ": rejected as implausible\n";
+        } else if (track_store.UpdateTrack(
+                       association.assigned_track_id.value(), report)) {
           track_id = association.assigned_track_id;
         } else {
           std::cerr << "report " << report.report_index

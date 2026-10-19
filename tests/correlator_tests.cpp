@@ -1,5 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <cstddef>
+#include <filesystem>
+#include <fstream>
 #include <functional>
 #include <limits>
 #include <nlohmann/json.hpp>
@@ -17,6 +19,7 @@
 #include "plausibility_validator.h"
 #include "report_parser.h"
 #include "report_validator.h"
+#include "runtime_config.h"
 #include "track_store.h"
 
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,
@@ -228,6 +231,7 @@ TEST_CASE("PlausibilityValidator accepts realistic movement") {
   const correlator::Report previous_report = MakeValidReport();
   correlator::Report report = previous_report;
   report.arrival_time_secs = 11.0;
+  report.receiver_time_secs = 10.5;
   report.longitude_degs += 0.001;
 
   CHECK(correlator::PlausibilityValidator()
@@ -239,6 +243,7 @@ TEST_CASE("PlausibilityValidator rejects an implausible horizontal jump") {
   const correlator::Report previous_report = MakeValidReport();
   correlator::Report report = previous_report;
   report.arrival_time_secs = 11.0;
+  report.receiver_time_secs = 10.5;
   report.latitude_degs += 0.1;
 
   const correlator::PlausibilityResult result =
@@ -254,6 +259,7 @@ TEST_CASE("PlausibilityValidator rejects an implausible altitude jump") {
   const correlator::Report previous_report = MakeValidReport();
   correlator::Report report = previous_report;
   report.arrival_time_secs = 11.0;
+  report.receiver_time_secs = 10.5;
   report.altitude_m = 1000.0;
 
   const correlator::PlausibilityResult result =
@@ -785,6 +791,7 @@ TEST_CASE(
   const correlator::Report previous_report = MakeValidReport();
   correlator::Report earlier_report = previous_report;
   earlier_report.arrival_time_secs = 9.0;
+  earlier_report.receiver_time_secs = 8.5;
   CHECK(correlator::PlausibilityValidator()
             .Validate(earlier_report, previous_report)
             .error->code ==
@@ -798,6 +805,18 @@ TEST_CASE(
   REQUIRE(result.error.has_value());
   CHECK(result.error->code ==
         correlator::PlausibilityErrorCode::kNonIncreasingTime);
+}
+
+TEST_CASE("PlausibilityValidator uses receiver observation time") {
+  const correlator::Report previous_report = MakeValidReport();
+  correlator::Report delayed_report = previous_report;
+  delayed_report.arrival_time_secs = 20.0;
+  delayed_report.receiver_time_secs = 10.5;
+  delayed_report.longitude_degs += 0.001;
+
+  CHECK(correlator::PlausibilityValidator()
+            .Validate(delayed_report, previous_report)
+            .IsValid());
 }
 
 TEST_CASE(
@@ -841,6 +860,54 @@ TEST_CASE("AssociationScorer rejects candidates below its minimum score") {
 
   REQUIRE(result.candidates.size() == 1U);
   CHECK_FALSE(result.assigned_track_id.has_value());
+}
+
+TEST_CASE("Runtime configuration loads overrides and rejects invalid values") {
+  const std::filesystem::path config_path =
+      std::filesystem::temp_directory_path() / "correlator-test-config.json";
+  {
+    std::ofstream output(config_path);
+    output << R"({"association":{"max_distance_m":123.0},)"
+              R"("scheduler":{"max_pending_reports":8}})";
+  }
+  const correlator::RuntimeConfig config =
+      correlator::LoadRuntimeConfig(config_path.string());
+  CHECK(config.association.max_distance_m == 123.0);
+  CHECK(config.max_pending_reports == 8U);
+  CHECK(config.max_active_tracks == correlator::kDefaultMaxActiveTracks);
+  std::filesystem::remove(config_path);
+
+  {
+    std::ofstream output(config_path);
+    output << R"({"track_store":{"max_active_tracks":0}})";
+  }
+  REQUIRE_THROWS_AS(correlator::LoadRuntimeConfig(config_path.string()),
+                    std::runtime_error);
+  std::filesystem::remove(config_path);
+
+  {
+    std::ofstream output(config_path);
+    output << R"({"unknown":1})";
+  }
+  REQUIRE_THROWS_AS(correlator::LoadRuntimeConfig(config_path.string()),
+                    std::runtime_error);
+  std::filesystem::remove(config_path);
+
+  {
+    std::ofstream output(config_path);
+    output << R"({"scheduler":{"decision_window_secs":0.0}})";
+  }
+  REQUIRE_THROWS_AS(correlator::LoadRuntimeConfig(config_path.string()),
+                    std::runtime_error);
+  std::filesystem::remove(config_path);
+
+  {
+    std::ofstream output(config_path);
+    output << R"({"association":{"max_distance_m":1e309}})";
+  }
+  REQUIRE_THROWS_AS(correlator::LoadRuntimeConfig(config_path.string()),
+                    std::runtime_error);
+  std::filesystem::remove(config_path);
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers,

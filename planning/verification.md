@@ -92,7 +92,8 @@ Calibration runs must use the fixture families and holdout procedure defined in 
 - **Doxygen:** Doxygen 1.9.6 generated `build/docs/html/index.html` successfully after the public API documentation commit `e83c62f`.
 - **Local Release:** Configure, build, and CTest pass with bounded parallelism.
 - **Docker:** User-confirmed successful build/test/sample verification on a separate Rancher Desktop-connected machine using the unmodified Dockerfile.
-- **Final review (current checkout):** Debug and Release builds, CTest, executable CLI contract test, the sample scorer, clang-format, clang-tidy, and Doxygen generation pass. The sample scores 99.85% association, 18 ID switches across 22 aircraft, 1 merged track, 0 invalid accepted reports, and 0 contract errors (`PASS`).
+- **Historical baseline:** Before the receiver-time plausibility integration, the sample scored 99.85% association, 18 ID switches across 22 aircraft, 1 merged track, 0 invalid accepted reports, and 0 contract errors (`PASS`).
+- **Final review (current checkout):** Debug and Release builds, CTest, executable CLI and plausibility integration tests, the sample scorer, `git diff --check`, clang-format, clang-tidy, and Doxygen generation pass. The current sample scores 99.71% association, 18 ID switches, 1 merged track, 0 invalid accepted reports, and 0 contract errors (`PASS`). The small association decrease is the documented trade-off from rejecting implausible associated updates.
 - **Secondary follow-up:** Container-level memory profiling and coverage improvement remain optional quality-evidence work.
 
 ## Coverage policy

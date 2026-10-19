@@ -44,7 +44,8 @@ The correlator must make each decision within two seconds of report arrival, emi
 - F03 synthetic calibration: `PASS`; 100.00% association across missing, changing, and duplicate identifier cases, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - F04 synthetic calibration: `PASS`; 100.00% association through short and long gaps, 1 expected retirement switch, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - F05 synthetic calibration: `PASS`; the 500 m distance gate plus exact-tie-only ambiguity rejection produces 100.00% association, 0 ID switches, and 0 merged tracks.
-- Final sample regression: `PASS`; 99.85% association, 18 ID switches across 22 aircraft, 1 merged track, 0 invalid accepted reports, and 0 contract errors.
+- Historical final sample baseline: `PASS`; 99.85% association, 18 ID switches across 22 aircraft, 1 merged track, 0 invalid accepted reports, and 0 contract errors.
+- Current sample regression after receiver-time plausibility integration: `PASS`; 99.71% association, 18 ID switches, 1 merged track, 0 invalid accepted reports, and 0 contract errors.
 - F06 synthetic calibration: `PASS`; contradictory identity/position rejection produces 100.00% valid-report association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - F07 synthetic calibration: `PASS`; delayed bursts and deadline boundaries produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors.
 - F08 synthetic calibration: `PASS`; 10,000 reports across 500 aircraft produce 100.00% association, 0 ID switches, 0 merged tracks, 0 invalid accepted reports, and 0 contract errors in approximately 11.3 seconds. Child-process peak RSS measured 10,856 KB; container-level profiling remains outstanding.

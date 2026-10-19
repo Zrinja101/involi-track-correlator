@@ -21,6 +21,12 @@ AssociationScorer::AssociationScorer(AssociationConfig config)
       !std::isfinite(config_.age_weight) ||
       !std::isfinite(config_.identifier_weight) ||
       !std::isfinite(config_.altitude_weight) ||
+      !std::isfinite(config_.minimum_velocity_interval_secs) ||
+      config_.minimum_velocity_interval_secs <= 0.0 ||
+      !std::isfinite(config_.maximum_prediction_speed_mps) ||
+      config_.maximum_prediction_speed_mps <= 0.0 ||
+      !std::isfinite(config_.altitude_evidence_range_m) ||
+      config_.altitude_evidence_range_m <= 0.0 ||
       config_.distance_weight < 0.0 || config_.age_weight < 0.0 ||
       config_.identifier_weight < 0.0 || config_.altitude_weight < 0.0) {
     throw std::invalid_argument("Association configuration is invalid");
@@ -74,8 +80,8 @@ AssociationResult AssociationScorer::Evaluate(
         track->latest_report.altitude_m.has_value()) {
       const double altitude_difference_m = std::abs(
           report.altitude_m.value() - track->latest_report.altitude_m.value());
-      altitude_score =
-          std::max(0.0, 1.0 - altitude_difference_m / kAltitudeEvidenceRangeM);
+      altitude_score = std::max(
+          0.0, 1.0 - altitude_difference_m / config_.altitude_evidence_range_m);
     }
     const double score = config_.distance_weight * distance_score +
                          config_.age_weight * age_score +
@@ -129,7 +135,7 @@ double AssociationScorer::CalculateDistanceM(const Report& report,
   for (const Report& observation : track.history) {
     const double interval_secs =
         latest_observation->receiver_time_secs - observation.receiver_time_secs;
-    if (interval_secs >= kMinimumVelocityIntervalSecs &&
+    if (interval_secs >= config_.minimum_velocity_interval_secs &&
         (previous_observation == nullptr ||
          observation.receiver_time_secs >
              previous_observation->receiver_time_secs)) {
@@ -148,7 +154,7 @@ double AssociationScorer::CalculateDistanceM(const Report& report,
     if (prediction_age_secs > 0.0 && distance_m > 0.0) {
       const double scale =
           std::min(distance_m / interval_secs * prediction_age_secs,
-                   kMaximumPredictionSpeedMps * prediction_age_secs) /
+                   config_.maximum_prediction_speed_mps * prediction_age_secs) /
           distance_m;
       predicted_latitude_degs += (latest_observation->latitude_degs -
                                   previous_observation->latitude_degs) *

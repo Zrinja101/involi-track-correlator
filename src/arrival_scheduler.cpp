@@ -1,15 +1,19 @@
 #include "arrival_scheduler.h"
 
 #include <algorithm>
+#include <cmath>
 #include <stdexcept>
 #include <utility>
 
 namespace correlator {
 
-ArrivalScheduler::ArrivalScheduler(std::size_t max_pending_reports)
-    : max_pending_reports_(max_pending_reports) {
-  if (max_pending_reports == 0U) {
-    throw std::invalid_argument("Pending-report capacity must be positive");
+ArrivalScheduler::ArrivalScheduler(std::size_t max_pending_reports,
+                                   double decision_window_secs)
+    : max_pending_reports_(max_pending_reports),
+      decision_window_secs_(decision_window_secs) {
+  if (max_pending_reports == 0U || !std::isfinite(decision_window_secs) ||
+      decision_window_secs <= 0.0) {
+    throw std::invalid_argument("Scheduler configuration is invalid");
   }
 }
 
@@ -37,7 +41,7 @@ std::vector<Decision> ArrivalScheduler::Submit(std::size_t report_index,
   }
   pending_.push_back(PendingDecision{
       .report_index = report_index,
-      .deadline_secs = arrival_time_secs + kDecisionWindowSecs,
+      .deadline_secs = arrival_time_secs + decision_window_secs_,
   });
   return decisions;
 }

@@ -16,7 +16,7 @@ FetchContent_Declare(Catch2
     URL_HASH SHA256=c991b247a1a0d7bb9c39aa35faf0fe9e19764213f28ffba3109388e62ee0269c)
 FetchContent_MakeAvailable(json Catch2)
 
-add_library(correlator_core src/answer_writer.cpp src/arrival_scheduler.cpp src/association_scorer.cpp src/geo_utils.cpp src/identifier_matcher.cpp src/plausibility_validator.cpp src/report_parser.cpp src/report_validator.cpp src/track_store.cpp)
+add_library(correlator_core src/answer_writer.cpp src/arrival_scheduler.cpp src/association_scorer.cpp src/geo_utils.cpp src/identifier_matcher.cpp src/plausibility_validator.cpp src/report_parser.cpp src/report_validator.cpp src/runtime_config.cpp src/track_store.cpp)
 target_include_directories(correlator_core PUBLIC src)
 target_link_libraries(correlator_core PUBLIC nlohmann_json::nlohmann_json)
 
@@ -27,6 +27,14 @@ enable_testing()
 add_executable(correlator_tests tests/correlator_tests.cpp)
 target_link_libraries(correlator_tests PRIVATE correlator_core Catch2::Catch2WithMain)
 add_test(NAME correlator_tests COMMAND correlator_tests)
+
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
+add_test(NAME cli_contract
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/cli_contract_test.py
+            $<TARGET_FILE:correlator>)
+add_test(NAME plausibility_integration
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/plausibility_integration_test.py
+            $<TARGET_FILE:correlator>)
 
 if(ENABLE_COVERAGE)
     foreach(target correlator_core correlator correlator_tests)

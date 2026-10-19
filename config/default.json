@@ -1,0 +1,28 @@
+{
+  "association": {
+    "max_track_age_secs": 60.0,
+    "max_distance_m": 900.0,
+    "min_score": 0.4,
+    "min_score_margin": 0.0,
+    "distance_weight": 0.6,
+    "age_weight": 0.2,
+    "identifier_weight": 0.2,
+    "altitude_weight": 0.2,
+    "minimum_velocity_interval_secs": 0.5,
+    "maximum_prediction_speed_mps": 500.0,
+    "altitude_evidence_range_m": 500.0
+  },
+  "plausibility": {
+    "max_horizontal_speed_mps": 500.0,
+    "max_vertical_speed_mps": 150.0
+  },
+  "scheduler": {
+    "max_pending_reports": 4096,
+    "decision_window_secs": 2.0
+  },
+  "track_store": {
+    "max_active_tracks": 4096,
+    "max_track_history": 32,
+    "track_retirement_secs": 60.0
+  }
+}

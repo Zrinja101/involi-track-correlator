@@ -8,6 +8,10 @@ This file contains project-development instructions that are intentionally separ
 - **Catch2 v3.7.1:** C++ unit-test framework.
 - **vcpkg:** Installed by the reference Dockerfile for toolchain integration; project dependency versions remain pinned by the CMake `FetchContent` declarations.
 
+Runtime configuration is JSON, loaded once at startup with `--config path.json`.
+`config/default.json` documents the built-in defaults. Configuration changes are
+validated before input processing and are bounded to prevent resource growth.
+
 ## Local build and tests
 
 ```sh
@@ -81,4 +85,8 @@ docker run --rm -i correlator \
 python3 tools/score.py data/sample /tmp/correlator-output.jsonl
 ```
 
-The unmodified Dockerfile is the authoritative container build. The final sample regression passes the scorer at 99.85% association, with 18 ID switches, 1 merged track, 0 invalid accepted reports, and 0 contract errors.
+The unmodified Dockerfile is the authoritative container build. The historical
+pre-plausibility-integration sample baseline was 99.85% association, with 18 ID
+switches, 1 merged track, 0 invalid accepted reports, and 0 contract errors.
+The current receiver-time plausibility integration scores 99.71% association
+with the same switch, merge, invalid-report, and contract-error counts.

@@ -29,7 +29,7 @@ Make correctness measurable and the finished project maintainable, reviewable, a
 
 - **Completed stories:** S11, S12, and S13 are complete.
 - **Available evidence:** clang-format and clang-tidy have passed during S1–S10 implementation steps, the pinned dependency/build setup is recorded in `22d6374` and `bef9fa`, and F01 calibration passes.
-- **Current calibration result:** F01–F08 and the holdout fixture pass their current functional checks; F04 has one expected retirement switch. F08 runtime is approximately 11.3 seconds for 10,000 reports, and the final sample regression passes at 99.85% association, 18 ID switches, 1 merged track, 0 invalid accepted reports, and 0 contract errors.
+- **Current calibration result:** F01–F08 and the holdout fixture pass their current functional checks; F04 has one expected retirement switch. F08 runtime is approximately 11.3 seconds for 10,000 reports. The historical sample baseline was 99.85% association; the current plausibility-integrated sample regression passes at 99.71% association, 18 ID switches, 1 merged track, 0 invalid accepted reports, and 0 contract errors.
 - **Memory evidence:** F08 child-process peak RSS is 10,856 KB; container-level profiling remains outstanding.
 - **Coverage progress:** 93.9% line, 100% function, and 59.6% branch coverage after additional parser, configuration, and lifecycle edge tests. Additional coverage work is non-blocking.
 - **Documentation status:** Doxygen 1.9.6 generation passes and produces `build/docs/html/index.html`; public API documentation was added in `e83c62f`.
