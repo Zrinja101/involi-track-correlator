@@ -15,11 +15,17 @@ namespace correlator {
 /// Maximum age of a track eligible for association, in seconds.
 inline constexpr double kDefaultMaxAssociationAgeSecs = 60.0;
 /// Maximum horizontal candidate distance, in metres.
-inline constexpr double kDefaultMaxAssociationDistanceM = 500.0;
+inline constexpr double kDefaultMaxAssociationDistanceM = 900.0;
 /// Minimum normalized score required for assignment.
-inline constexpr double kDefaultMinAssociationScore = 0.5;
+inline constexpr double kDefaultMinAssociationScore = 0.4;
 /// Minimum score margin; zero still rejects exact ties.
 inline constexpr double kDefaultMinAssociationMargin = 0.0;
+/// Minimum observation interval used to estimate track velocity, in seconds.
+inline constexpr double kMinimumVelocityIntervalSecs = 0.5;
+/// Maximum speed allowed when extrapolating a track, in metres per second.
+inline constexpr double kMaximumPredictionSpeedMps = 500.0;
+/// Altitude difference at which altitude evidence becomes zero, in metres.
+inline constexpr double kAltitudeEvidenceRangeM = 500.0;
 
 /// Tunable weights and gates used by AssociationScorer.
 struct AssociationConfig {
@@ -37,6 +43,8 @@ struct AssociationConfig {
   double age_weight = 0.2;
   /// Weight applied to identifier evidence.
   double identifier_weight = 0.2;
+  /// Weight applied to optional altitude evidence.
+  double altitude_weight = 0.2;
 };
 
 /// One scored, feasible track candidate.

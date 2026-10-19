@@ -20,8 +20,9 @@ AssociationScorer::AssociationScorer(AssociationConfig config)
       !std::isfinite(config_.distance_weight) ||
       !std::isfinite(config_.age_weight) ||
       !std::isfinite(config_.identifier_weight) ||
+      !std::isfinite(config_.altitude_weight) ||
       config_.distance_weight < 0.0 || config_.age_weight < 0.0 ||
-      config_.identifier_weight < 0.0) {
+      config_.identifier_weight < 0.0 || config_.altitude_weight < 0.0) {
     throw std::invalid_argument("Association configuration is invalid");
   }
 }
@@ -56,6 +57,17 @@ AssociationResult AssociationScorer::Evaluate(
       continue;
     }
 
+    const IdentifierRelation identifier_relation =
+        IdentifierMatcher::Compare(report, *track);
+    if (report.identifier.has_value() &&
+        identifier_relation == IdentifierRelation::kConflict) {
+      result.rejected_for_identifier_conflict = true;
+      continue;
+    }
+    if (report.altitude_m.has_value() !=
+        track->latest_report.altitude_m.has_value()) {
+      continue;
+    }
     const double distance_m = CalculateDistanceM(report, *track, age_secs);
     if (distance_m > config_.max_distance_m) {
       continue;
@@ -63,20 +75,23 @@ AssociationResult AssociationScorer::Evaluate(
 
     const double distance_score = 1.0 - distance_m / config_.max_distance_m;
     const double age_score = 1.0 - age_secs / config_.max_track_age_secs;
-    const IdentifierRelation identifier_relation =
-        IdentifierMatcher::Compare(report, *track);
-    if (identifier_matches_active_track &&
-        identifier_relation == IdentifierRelation::kConflict) {
-      result.rejected_for_identifier_conflict = true;
-      continue;
-    }
     const double identifier_score =
         identifier_relation == IdentifierRelation::kMatch      ? 1.0
         : identifier_relation == IdentifierRelation::kConflict ? 0.0
                                                                : 0.5;
+    double altitude_score = 0.5;
+    if (report.altitude_m.has_value() &&
+        track->latest_report.altitude_m.has_value()) {
+      const double altitude_difference_m =
+          std::abs(report.altitude_m.value() -
+                   track->latest_report.altitude_m.value());
+      altitude_score = std::max(
+          0.0, 1.0 - altitude_difference_m / kAltitudeEvidenceRangeM);
+    }
     const double score = config_.distance_weight * distance_score +
                          config_.age_weight * age_score +
-                         config_.identifier_weight * identifier_score;
+                         config_.identifier_weight * identifier_score +
+                         config_.altitude_weight * altitude_score;
     result.candidates.push_back(AssociationCandidate{
         .track_id = track->track_id, .score = score, .distance_m = distance_m});
   }
@@ -106,19 +121,52 @@ AssociationResult AssociationScorer::Evaluate(
 double AssociationScorer::CalculateDistanceM(const Report& report,
                                              const TrackState& track,
                                              double age_secs) const {
-  double predicted_latitude_degs = track.latest_report.latitude_degs;
-  double predicted_longitude_degs = track.latest_report.longitude_degs;
-  if (track.history.size() >= 2U) {
-    const Report& previous_report = track.history[track.history.size() - 2U];
-    const double interval_secs = track.latest_report.arrival_time_secs -
-                                 previous_report.arrival_time_secs;
-    if (interval_secs > 0.0) {
+  const Report* latest_observation = nullptr;
+  for (const Report& observation : track.history) {
+    if (observation.receiver_time_secs <= report.receiver_time_secs &&
+        (latest_observation == nullptr ||
+         observation.receiver_time_secs >
+             latest_observation->receiver_time_secs)) {
+      latest_observation = &observation;
+    }
+  }
+  if (latest_observation == nullptr) {
+    latest_observation = &track.latest_report;
+  }
+
+  double predicted_latitude_degs = latest_observation->latitude_degs;
+  double predicted_longitude_degs = latest_observation->longitude_degs;
+  const Report* previous_observation = nullptr;
+  for (const Report& observation : track.history) {
+    const double interval_secs = latest_observation->receiver_time_secs -
+                                 observation.receiver_time_secs;
+    if (interval_secs >= kMinimumVelocityIntervalSecs &&
+        (previous_observation == nullptr ||
+         observation.receiver_time_secs >
+             previous_observation->receiver_time_secs)) {
+      previous_observation = &observation;
+    }
+  }
+  if (previous_observation != nullptr) {
+    const double interval_secs = latest_observation->receiver_time_secs -
+                                 previous_observation->receiver_time_secs;
+    const double prediction_age_secs =
+        report.receiver_time_secs - latest_observation->receiver_time_secs;
+    const double distance_m = CalculateHorizontalDistanceM(
+        latest_observation->latitude_degs, latest_observation->longitude_degs,
+        previous_observation->latitude_degs,
+        previous_observation->longitude_degs);
+    if (prediction_age_secs > 0.0 && distance_m > 0.0) {
+      const double scale =
+          std::min(distance_m / interval_secs * prediction_age_secs,
+                   kMaximumPredictionSpeedMps * prediction_age_secs) /
+          distance_m;
       predicted_latitude_degs +=
-          (track.latest_report.latitude_degs - previous_report.latitude_degs) /
-          interval_secs * age_secs;
-      predicted_longitude_degs += (track.latest_report.longitude_degs -
-                                   previous_report.longitude_degs) /
-                                  interval_secs * age_secs;
+          (latest_observation->latitude_degs -
+           previous_observation->latitude_degs) * scale;
+      predicted_longitude_degs +=
+          (latest_observation->longitude_degs -
+           previous_observation->longitude_degs) * scale;
     }
   }
 

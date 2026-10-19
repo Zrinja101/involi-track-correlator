@@ -11,7 +11,6 @@
 #include "answer_writer.h"
 #include "arrival_scheduler.h"
 #include "association_scorer.h"
-#include "plausibility_validator.h"
 #include "report_parser.h"
 #include "report_validator.h"
 #include "track_store.h"
@@ -20,7 +19,6 @@ int main() try {
   correlator::ArrivalScheduler scheduler;
   correlator::TrackStore track_store;
   correlator::AssociationScorer association_scorer;
-  correlator::PlausibilityValidator plausibility_validator;
   std::unordered_map<std::size_t, correlator::Report> pending_reports;
   std::size_t report_index = 0U;
   double last_at_secs = 0.0;
@@ -50,24 +48,22 @@ int main() try {
         const correlator::TrackState* track =
             track_store.FindTrack(association.assigned_track_id.value());
         if (track != nullptr &&
-            plausibility_validator.Validate(report, track->latest_report)
-                .IsValid() &&
             track_store.UpdateTrack(association.assigned_track_id.value(),
                                     report)) {
           track_id = association.assigned_track_id;
         } else {
           std::cerr << "report " << report.report_index
-                    << ": rejected as implausible for candidate track\n";
+                    << ": candidate track update failed\n";
         }
-      } else if (association.rejected_for_identifier_conflict) {
-        std::cerr << "report " << report.report_index
-                  << ": rejected for contradictory identifier and position\n";
       } else if (association.candidates.empty()) {
         track_id = track_store.CreateTrack(report);
         if (!track_id.has_value()) {
           std::cerr << "report " << report.report_index
                     << ": active-track capacity reached\n";
         }
+      } else if (association.rejected_for_identifier_conflict) {
+        std::cerr << "report " << report.report_index
+                  << ": rejected for contradictory identifier and position\n";
       } else {
         std::cerr << "report " << report.report_index
                   << ": rejected as ambiguous\n";

@@ -455,6 +455,67 @@ TEST_CASE("AssociationScorer selects the nearest feasible track") {
   CHECK(result.candidates.front().track_id == "Tnear");
 }
 
+TEST_CASE("AssociationScorer ignores receiver duplicate intervals in prediction") {
+  correlator::Report first_report = MakeValidReport();
+  first_report.arrival_time_secs = 1.0;
+  first_report.longitude_degs = 7.0;
+  correlator::Report duplicate_report = first_report;
+  duplicate_report.arrival_time_secs = 1.1;
+  correlator::Report latest_report = first_report;
+  latest_report.arrival_time_secs = 2.0;
+  latest_report.longitude_degs = 7.001;
+  const correlator::TrackState track{
+      .track_id = "T1",
+      .latest_report = latest_report,
+      .history = {first_report, duplicate_report, latest_report},
+  };
+  correlator::Report query = latest_report;
+  query.arrival_time_secs = 2.5;
+  query.longitude_degs = 7.0015;
+
+  const std::vector<correlator::TrackState> tracks = {track};
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(query, tracks);
+
+  REQUIRE(result.assigned_track_id.has_value());
+  CHECK(result.assigned_track_id.value() == "T1");
+}
+
+TEST_CASE("AssociationScorer uses altitude to separate nearby aircraft") {
+  correlator::Report query = MakeValidReport();
+  query.altitude_m = 1000.0;
+  correlator::Report lower_report = MakeValidReport();
+  lower_report.altitude_m = 500.0;
+  correlator::Report matching_report = MakeValidReport();
+  matching_report.altitude_m = 1000.0;
+  const std::vector<correlator::TrackState> tracks = {
+      MakeTrack("Tlower", lower_report),
+      MakeTrack("Tmatch", matching_report),
+  };
+
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(query, tracks);
+
+  REQUIRE(result.assigned_track_id.has_value());
+  CHECK(result.assigned_track_id.value() == "Tmatch");
+}
+
+TEST_CASE("AssociationScorer rejects candidates with missing altitude evidence") {
+  correlator::Report query = MakeValidReport();
+  query.altitude_m = std::nullopt;
+  correlator::Report track_report = MakeValidReport();
+  track_report.altitude_m = 1000.0;
+  const std::vector<correlator::TrackState> tracks = {
+      MakeTrack("Taltitude", track_report),
+  };
+
+  const correlator::AssociationResult result =
+      correlator::AssociationScorer().Evaluate(query, tracks);
+
+  CHECK_FALSE(result.assigned_track_id.has_value());
+  CHECK(result.candidates.empty());
+}
+
 TEST_CASE(
     "AssociationScorer uses matching identifiers as supporting evidence") {
   correlator::Report report = MakeValidReport();
